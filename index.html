@@ -220,7 +220,7 @@
       resultOverlay.style.display = "none";
 
       document.getElementById("player1").classList.add("active");
-      showNotification(`Bắt đầu câu hỏi mới! Đến lượt bạn quay nón.`, 3000, 'info');
+      showNotification(`Bắt đầu câu hỏi mới! Mời bạn quay nón.`, 3000, 'info');
       updateBuyLetterButtonState(); // Cập nhật trạng thái nút "Mua chữ"
     }
 
@@ -345,7 +345,8 @@
             isGuessingFullAnswer = false;
             revealRandomLetter(); // Hàm mới để điền ngẫu nhiên 1 chữ
             showNotification(`Kết quả: May mắn! Một chữ cái đã được tiết lộ.`, 3000, 'success');
-            document.getElementById("spinButton").disabled = false;
+            document.getElementById("spinButton").disabled = false; // Cho phép quay lại ngay
+            guessInputContainer.style.display = "none"; // Ẩn input đoán chữ
             setTimeout(() => { resultOverlay.style.display = "none"; }, 1500);
             updateBuyLetterButtonState(); // Cập nhật trạng thái nút "Mua chữ"
         } else { // Fallback, không nên xảy ra với cấu hình hiện tại
@@ -354,6 +355,7 @@
           isGuessingFullAnswer = false;
           showNotification(`Kết quả không xác định: ${result}. Vui lòng quay lại.`, 3000, 'warning');
           document.getElementById("spinButton").disabled = false;
+          guessInputContainer.style.display = "none"; // Ẩn input đoán chữ
           setTimeout(() => { resultOverlay.style.display = "none"; }, 1500);
         }
 
@@ -402,7 +404,8 @@
     function revealRandomLetter() {
         const hiddenIndices = [];
         for (let i = 0; i < revealedLetters.length; i++) {
-            if (revealedLetters[i] === null) {
+            // Chỉ thêm vào nếu là chữ cái và chưa được tiết lộ
+            if (answer[i] !== " " && revealedLetters[i] === null) {
                 hiddenIndices.push(i);
             }
         }
@@ -414,11 +417,13 @@
             if (box) {
                 box.innerText = answer[randomIndex];
                 box.classList.add("revealed");
-                showNotification(`May mắn! Chữ '${answer[randomIndex]}' đã được mở.`, 3000, 'success');
+                // Không hiển thị thông báo "May mắn" ở đây, đã hiển thị ở spinWheel
             }
-            checkGameCompletion();
+            checkGameCompletion(); // Kiểm tra xem đã hoàn thành câu hỏi chưa
+            return true; // Trả về true nếu một chữ cái được tiết lộ
         } else {
             showNotification("Không còn chữ cái nào để tiết lộ. Đáp án đã được mở hết.", 3000, 'info');
+            return false; // Trả về false nếu không còn chữ nào để tiết lộ
         }
     }
 
@@ -430,27 +435,26 @@
             return;
         }
 
-        const hiddenIndices = [];
-        for (let i = 0; i < revealedLetters.length; i++) {
-            if (revealedLetters[i] === null) {
-                hiddenIndices.push(i);
-            }
-        }
+        const letterRevealed = revealRandomLetter(); // Cố gắng tiết lộ một chữ cái
 
-        if (hiddenIndices.length > 0) {
+        if (letterRevealed) {
             scores[0] -= COST_OF_LETTER;
-            updateScores();
-            revealRandomLetter(); // Sử dụng lại hàm revealRandomLetter
-            showNotification(`Bạn đã mua một chữ với giá ${COST_OF_LETTER} điểm!`, 3000, 'success');
+            updateScores(); // Cập nhật điểm ngay sau khi trừ
+            showNotification(`Bạn đã mua một chữ với giá -${COST_OF_LETTER} điểm!`, 3000, 'success');
+            // Sau khi mua chữ, người chơi có thể tiếp tục quay hoặc đoán.
+            // Ẩn ô input đoán chữ và cho phép quay lại ngay lập tức.
+            guessInputContainer.style.display = "none";
+            document.getElementById("spinButton").disabled = false; 
             updateBuyLetterButtonState(); // Cập nhật trạng thái nút sau khi mua
         } else {
-            showNotification("Không còn chữ cái nào để mua. Đáp án đã được mở hết.", 3000, 'info');
+            // revealRandomLetter() đã tự thông báo nếu không còn chữ để tiết lộ
+            // Không trừ điểm nếu không mua được chữ nào
         }
     }
 
     // Hàm mới: Cập nhật trạng thái nút "Mua chữ"
     function updateBuyLetterButtonState() {
-        const hiddenLettersCount = revealedLetters.filter(l => l === null).length;
+        const hiddenLettersCount = revealedLetters.filter(l => l === null && l !== " ").length; // Đếm số chữ cái chưa được tiết lộ, bỏ qua khoảng trắng
         if (scores[0] < 500 || hiddenLettersCount === 0) {
             buyLetterButton.disabled = true;
             buyLetterButton.classList.add('disabled');
@@ -501,7 +505,7 @@
       if (matched > 0) {
         let earned = 0;
         if (currentSpinValue === "double") {
-          earned = matched * 2 * 200; // Nhân đôi điểm và số chữ cái tìm được
+          earned = matched * 2 * 200; // Nhân đôi điểm và số chữ cái tìm được (ví dụ)
           showNotification(`Chính xác! Bạn đoán đúng ${matched} chữ. Được x2 điểm, nhận +${earned} điểm.`, 3000, 'success');
         } else {
           earned = matched * currentSpinValue;
@@ -516,6 +520,8 @@
       updateScores();
       isGuessingLetter = false;
       checkGameCompletion();
+      document.getElementById("spinButton").disabled = false; // Cho phép quay lại ngay sau khi đoán chữ
+      guessInputContainer.style.display = "none"; // Ẩn input đoán chữ
     }
 
     function processFullAnswerGuess(guess) {
@@ -547,6 +553,8 @@
       }
       updateScores();
       isGuessingFullAnswer = false;
+      document.getElementById("spinButton").disabled = false; // Cho phép quay lại ngay sau khi đoán toàn bộ
+      guessInputContainer.style.display = "none"; // Ẩn input đoán chữ
     }
 
     function updateScores() {
@@ -555,13 +563,13 @@
     }
 
     function checkGameCompletion() {
-      const allLetterBoxesFilled = revealedLetters.every(char => char !== null);
+      const allLetterBoxesFilled = revealedLetters.every(char => char !== null && char !== " "); // Kiểm tra tất cả các chữ cái (không tính khoảng trắng) đã được mở chưa
 
       if (allLetterBoxesFilled) {
         showNotification("Tất cả các ô đã được mở! Chuyển sang câu hỏi tiếp theo.", 3000, 'info');
         setTimeout(() => {
           initializeGame();
-        }, 5000); // Thời gian chờ 5 giây trước khi chuyển câu hỏi
+        }, 3000); // Thời gian chờ 3 giây trước khi chuyển câu hỏi
       }
     }
 
