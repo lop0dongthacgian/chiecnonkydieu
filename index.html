@@ -638,7 +638,7 @@
     const backgroundMusic = document.getElementById("backgroundMusic");
     const musicToggleBtn = document.getElementById("musicToggle");
 
-    let currentQuestionIndex = 0;
+    let currentQuestionIndex; // Không dùng biến này nữa, thay bằng questionOrder
     let currentQuestion;
     let answer;
     let plainAnswer;
@@ -652,6 +652,10 @@
 
     let isGuessingLetter = false;
     let isGuessingFullAnswer = false;
+
+    // --- Biến mới cho việc chọn câu hỏi ngẫu nhiên và không lặp lại ---
+    let availableQuestionIndices = []; // Lưu trữ các chỉ số câu hỏi còn lại
+    let askedQuestionIndices = []; // Lưu trữ các chỉ số câu hỏi đã hỏi
 
     // --- Chức năng nhạc nền ---
     let isMusicPlaying = false; 
@@ -716,18 +720,36 @@
         }, duration);
     }
 
+    // --- Hàm mới để lấy câu hỏi ngẫu nhiên không lặp lại ---
+    function getRandomQuestionIndex() {
+        if (availableQuestionIndices.length === 0) {
+            // Nếu đã hỏi hết tất cả các câu, có thể reset lại hoặc kết thúc trò chơi
+            return -1; // Đánh dấu đã hết câu hỏi
+        }
+        const randomIndex = Math.floor(Math.random() * availableQuestionIndices.length);
+        const questionActualIndex = availableQuestionIndices.splice(randomIndex, 1)[0]; // Lấy và loại bỏ khỏi danh sách
+        askedQuestionIndices.push(questionActualIndex); // Thêm vào danh sách đã hỏi
+        return questionActualIndex;
+    }
+
     function initializeGame() {
-      if (allQuestions.length === 0) {
-        showNotification("Không có câu hỏi nào để hiển thị!", 5000, 'error');
-        return;
+      if (availableQuestionIndices.length === 0 && askedQuestionIndices.length === 0) {
+          // Lần đầu tiên chạy hoặc đã chơi xong hết các câu trước đó
+          for (let i = 0; i < allQuestions.length; i++) {
+              availableQuestionIndices.push(i);
+          }
+          // Xáo trộn availableQuestionIndices nếu muốn (tùy chọn)
+          // availableQuestionIndices.sort(() => Math.random() - 0.5); 
       }
 
-      if (currentQuestionIndex >= allQuestions.length) {
+      const nextQuestionActualIndex = getRandomQuestionIndex();
+
+      if (nextQuestionActualIndex === -1) {
         endGame();
         return;
       }
 
-      currentQuestion = allQuestions[currentQuestionIndex];
+      currentQuestion = allQuestions[nextQuestionActualIndex];
       answer = currentQuestion.answer;
       plainAnswer = currentQuestion.plainAnswer;
       revealedLetters = Array(answer.length).fill(null);
@@ -747,7 +769,7 @@
       resultOverlay.style.display = "none";
 
       document.getElementById("player1").classList.add("active");
-      showNotification("Bắt đầu câu hỏi mới! Đến lượt bạn quay nón.");
+      showNotification(`Bắt đầu câu hỏi mới (${askedQuestionIndices.length}/${allQuestions.length})! Đến lượt bạn quay nón.`);
     }
 
     function renderAnswerBoxes() {
@@ -931,7 +953,7 @@
       if (matched > 0) {
         let earned = 0;
         if (currentSpinValue === "double") {
-          earned = matched * 2 * 200;
+          earned = matched * 2 * 200; // Giả sử "Nhân đôi" sẽ x2 điểm cơ bản (200)
           showNotification(`Chính xác! Bạn đoán đúng ${matched} chữ. Được x2 điểm, nhận +${earned} điểm.`, 3000, 'success');
         } else {
           earned = matched * currentSpinValue;
@@ -986,9 +1008,8 @@
 
       if (allLetterBoxesFilled) {
         showNotification("Tất cả các ô đã được mở! Chuyển sang câu hỏi tiếp theo.", 3000, 'info');
-        currentQuestionIndex++;
         setTimeout(() => {
-          initializeGame();
+          initializeGame(); // Gọi lại để lấy câu hỏi mới
         }, 2000); 
       }
     }
@@ -1006,6 +1027,7 @@
       showNotification("Trò chơi đã kết thúc! Tổng điểm của bạn là: " + finalScore + ". Cảm ơn bạn đã tham gia.", 5000, 'info');
     }
 
+    // Khởi tạo trò chơi lần đầu
     initializeGame();
   </script>
 </body>
