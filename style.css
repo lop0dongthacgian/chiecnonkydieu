@@ -1,0 +1,618 @@
+:root {
+    /* Màu sắc đa dạng, tươi sáng và rực rỡ */
+    --primary-color: #FF5733; /* Cam tươi - nổi bật */
+    --secondary-color: #33FF57; /* Xanh lá cây chanh - năng động */
+    --accent-color: #3357FF; /* Xanh dương điện - mạnh mẽ */
+    --background-color: #E6F7FF; /* Xanh da trời rất nhạt - nền nhẹ nhàng */
+    --card-bg-color: #FFFFFF; /* Nền thẻ trắng */
+    --border-color: #FFC300; /* Vàng rực rỡ - viền nhấn */
+    --text-color: #333333;
+    --dark-text-color: #555555;
+    --font-family: 'Comic Sans MS', 'Arial', sans-serif;
+
+    /* Colors for notifications (có độ trong suốt) */
+    --info-bg-color: rgba(33, 150, 243, 0.85); /* Blue */
+    --info-text-color: white;
+    --success-bg-color: rgba(76, 175, 80, 0.85); /* Green */
+    --success-text-color: white;
+    --error-bg-color: rgba(244, 67, 54, 0.85); /* Red */
+    --error-text-color: white;
+    --warning-bg-color: rgba(255, 152, 0, 0.85); /* Orange */
+    --warning-text-color: white;
+
+    /* New color for music button */
+    --music-button-color: #9C27B0; /* Tím */
+    --music-button-hover-color: #7B1FA2; /* Tím đậm hơn khi hover */
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    box-sizing: border-box;
+    position: relative;
+    /* >>> CẬP NHẬT: THÊM TRANH HOẠT HÌNH LÀM NỀN BODY <<< */
+    /* Bạn có thể thay 'path/to/your/cartoon-bg.png' bằng đường dẫn đến ảnh của bạn */
+    /* background-image: url('path/to/your/cartoon-bg.png'); */
+    /* background-size: cover; */
+    /* background-repeat: no-repeat; */
+    /* background-position: center center; */
+    /* background-attachment: fixed; */
+}
+
+.game-wrapper {
+    display: flex;
+    flex-direction: column;
+    max-width: 1200px;
+    width: 100%;
+    background: var(--card-bg-color);
+    border-radius: 25px; /* Góc bo tròn nhiều hơn */
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2); /* Bóng đổ mềm và rõ hơn */
+    overflow: hidden;
+    margin-bottom: 20px;
+    border: 5px solid var(--border-color); /* Viền màu vàng tươi */
+    /* >>> CẬP NHẬT: THÊM TRANH HOẠT HÌNH LÀM NỀN CHO GAME-WRAPPER <<< */
+    /* background-image: url('path/to/your/frame-pattern.png'); */
+    /* background-repeat: repeat; */
+    /* background-size: 150px; */
+}
+
+header {
+    background-color: var(--primary-color); /* Cam tươi */
+    color: white;
+    padding: 30px 0; /* Tăng padding */
+    text-align: center;
+    border-bottom: 7px solid var(--accent-color); /* Xanh dương đậm nhấn nhá */
+    position: relative;
+    font-weight: bold;
+    /* >>> CẬP NHẬT: THÊM TRANH HOẠT HÌNH LÀM NỀN HEADER <<< */
+    /* background-image: url('path/to/your/header-banner.png'); */
+    /* background-size: cover; */
+    /* background-position: center bottom; */
+}
+
+header h1 {
+    margin: 0;
+    font-size: 3.5em; /* Tăng kích thước chữ */
+    letter-spacing: 3px;
+    text-shadow: 3px 3px 5px rgba(0,0,0,0.3); /* Thêm bóng chữ rõ hơn */
+    color: #FFF; /* Đảm bảo chữ trắng */
+}
+
+/* Music Button - New position: fixed to bottom right */
+#musicToggle {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background-color: var(--music-button-color); /* Tím */
+    color: white;
+    border: none;
+    padding: 15px 25px; /* Tăng kích thước nút */
+    border-radius: 12px; /* Góc bo tròn */
+    cursor: pointer;
+    font-size: 1.2em;
+    font-weight: bold;
+    box-shadow: 0 7px 20px rgba(0, 0, 0, 0.3); /* Bóng đổ rõ hơn */
+    z-index: 1001;
+    transition: background-color 0.3s ease, transform 0.2s ease, opacity 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px; /* Khoảng cách icon và chữ */
+    opacity: 0.9; /* Độ trong suốt mặc định */
+}
+#musicToggle:hover {
+    background-color: var(--music-button-hover-color);
+    transform: translateY(-5px); /* Hiệu ứng nổi bật */
+    opacity: 1;
+}
+#musicToggle:active {
+    transform: translateY(0);
+}
+#musicToggle.playing::before {
+    content: "🎵 ";
+}
+#musicToggle.paused::before {
+    content: "🔇 ";
+}
+
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    padding: 40px; /* Tăng padding tổng thể */
+    gap: 40px; /* Tăng khoảng cách giữa các panel */
+}
+
+.left-panel, .right-panel {
+    flex: 1;
+    padding: 30px; /* Tăng padding */
+    border-radius: 20px; /* Góc bo tròn nhiều hơn */
+    background: var(--card-bg-color);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12); /* Bóng đổ mềm mại */
+    border: 3px solid var(--border-color); /* Viền màu vàng tươi */
+}
+
+.left-panel {
+    order: 2;
+    /* >>> CẬP NHẬT: THÊM TRANH HOẠT HÌNH LÀM NỀN PANEL TRÁI <<< */
+    /* background-image: url('path/to/your/character-left.png'); */
+    /* background-repeat: no-repeat; */
+    /* background-position: bottom left; */
+    /* background-size: 30%; */
+}
+
+.right-panel {
+    order: 1;
+    /* >>> CẬP NHẬT: THÊM TRANH HOẠT HÌNH LÀM NỀN PANEL PHẢI <<< */
+    /* background-image: url('path/to/your/character-right.png'); */
+    /* background-repeat: no-repeat; */
+    /* background-position: bottom right; */
+    /* background-size: 30%; */
+}
+
+/* === Question & Answer Display === */
+#question {
+    text-align: center;
+    font-size: 1.6em; /* Kích thước chữ lớn hơn */
+    margin-bottom: 35px;
+    min-height: 70px; /* Chiều cao tối thiểu */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--dark-text-color);
+    background-color: #FFFACD; /* Vàng chanh nhạt - dịu mắt */
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: inset 0 3px 8px rgba(0,0,0,0.1);
+    font-weight: 700; /* Chữ rất đậm */
+    border: 3px dashed var(--accent-color); /* Viền nét đứt xanh dương */
+}
+
+.answer-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px; /* Khoảng cách giữa các ô */
+    font-size: 36px; /* Kích thước chữ đáp án lớn hơn */
+    margin-bottom: 45px;
+}
+
+.answer-group {
+    display: flex;
+    gap: 10px; /* Khoảng cách giữa các chữ trong nhóm */
+}
+
+.letter-box {
+    width: 65px; /* Kích thước ô chữ lớn hơn */
+    height: 65px;
+    border: 4px solid var(--primary-color); /* Viền cam đậm */
+    background-color: #FFFAF0; /* Trắng ngà */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: var(--primary-color); /* Màu chữ đáp án cam */
+    border-radius: 10px; /* Góc bo tròn nhẹ */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transition: background-color 0.3s ease, transform 0.2s ease, color 0.3s ease;
+    text-transform: uppercase; /* Đảm bảo chữ in hoa */
+}
+
+.letter-box:not(:empty) {
+    background-color: var(--secondary-color); /* Xanh lá chanh khi đã mở */
+    color: white; /* Chữ trắng khi đã mở */
+    transform: scale(1.1); /* Hiệu ứng nổi bật rõ hơn */
+    border-color: var(--accent-color); /* Viền xanh dương khi đã mở */
+}
+
+/* === Wheel === */
+#wheel-container {
+    position: relative;
+    width: 550px; /* Kích thước bánh xe lớn hơn */
+    height: 550px;
+    margin: 0 auto 50px;
+    border-radius: 50%;
+    box-shadow: 0 0 50px rgba(0,0,0,0.3);
+    border: 30px solid var(--primary-color); /* Viền bánh xe đậm hơn */
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: linear-gradient(135deg, #FFC0CB, #ADD8E6); /* Nền gradient vui tươi */
+    /* >>> CẬP NHẬT: THÊM TRANH HOẠT HÌNH LÀM NỀN WHEEL CONTAINER <<< */
+    /* background-image: url('path/to/your/star-pattern.png'); */
+    /* background-repeat: repeat; */
+    /* background-size: 100px; */
+}
+
+#wheel {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: relative;
+    background: linear-gradient(45deg, #F0FFFF, #F8F8FF); /* Nền nhẹ cho bánh xe */
+    transition: transform 5s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.segment {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    top: 0;
+    left: 0;
+    transform-origin: 100% 100%;
+    /* Các màu segment đã được định nghĩa trong JS, đây là fallback */
+    background-color: #ccc;
+    clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 1.4em; /* Kích thước chữ trên segment */
+    font-weight: bold;
+    color: white;
+    border: 1px solid rgba(0,0,0,0.08); /* Viền phân cách mềm hơn */
+    box-sizing: border-box;
+    padding-left: 20%; /* Dịch chữ vào trong hơn */
+    overflow: hidden;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.4); /* Bóng chữ rõ hơn trên segment */
+}
+
+.segment span {
+    display: block;
+    white-space: nowrap;
+    transform: rotate(45deg);
+    padding-top: 15px; /* Dịch chữ xuống nhẹ */
+}
+
+#spinButton {
+    position: absolute;
+    font-size: 48px; /* Kích thước chữ nút quay lớn hơn */
+    font-weight: bold;
+    color: white;
+    background-color: var(--accent-color); /* Xanh dương điện */
+    border: 12px solid #fff; /* Viền trắng dày */
+    border-radius: 50%;
+    width: 180px; /* Kích thước nút quay lớn hơn */
+    height: 180px;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4); /* Bóng đổ mạnh hơn */
+    z-index: 10;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+#spinButton:hover {
+    background-color: #2A48CC;
+    transform: scale(1.1);
+}
+
+#spinButton:active {
+    transform: scale(0.95);
+}
+
+#spinButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+#resultOverlay {
+    position: absolute;
+    font-size: 50px; /* Kích thước chữ kết quả lớn hơn */
+    font-weight: bold;
+    text-align: center;
+    color: white;
+    background: rgba(0, 123, 255, 0.95);
+    padding: 30px 50px; /* Tăng padding */
+    border-radius: 20px; /* Góc bo tròn */
+    z-index: 99;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 200px;
+    display: none;
+    box-shadow: 0 0 30px rgba(0,0,0,0.6);
+    animation: fadeIn 0.5s ease-out;
+    text-shadow: 3px 3px 5px rgba(0,0,0,0.4);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.7); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* === Player Scoreboard === */
+#players {
+    margin-bottom: 35px;
+}
+
+.player {
+    background: var(--card-bg-color);
+    padding: 30px;
+    border-radius: 20px;
+    border: 5px solid var(--border-color); /* Viền vàng rực rỡ */
+    margin-bottom: 30px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 7px 20px rgba(0,0,0,0.1);
+    /* >>> CẬP NHẬT: THÊM TRANH HOẠT HÌNH LÀM NỀN PLAYER <<< */
+    /* background-image: url('path/to/your/player-icon.png'); */
+    /* background-repeat: no-repeat; */
+    /* background-position: top 10px right 10px; */
+    /* background-size: 40px; */
+}
+
+.player.active {
+    border-color: var(--primary-color); /* Viền cam khi active */
+    background-color: #FFFAF0; /* Nền vàng nhạt khi active */
+    box-shadow: 0 0 25px rgba(255, 87, 51, 0.6); /* Bóng đổ cam */
+    transform: scale(1.08); /* Phóng to rõ hơn khi active */
+}
+
+.player h3 {
+    margin: 0 0 15px;
+    font-size: 2.2em; /* Kích thước chữ lớn hơn */
+    color: var(--primary-color); /* Màu chữ tiêu đề cam */
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+}
+
+.player p {
+    font-size: 1.8em; /* Kích thước chữ điểm lớn hơn */
+    font-weight: bold;
+    color: var(--accent-color); /* Màu chữ điểm xanh dương */
+    margin: 0;
+}
+
+/* === Guess Input === */
+#guessInputContainer {
+    margin-top: 45px;
+    text-align: center;
+    display: none;
+    background: var(--card-bg-color);
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    border: 3px solid var(--border-color);
+}
+
+#guessInputContainer label {
+    font-size: 1.4em; /* Kích thước chữ lớn hơn */
+    font-weight: bold;
+    color: var(--dark-text-color);
+    margin-bottom: 25px;
+    display: block;
+}
+
+#guessInputContainer input[type="text"] {
+    padding: 18px 25px; /* Tăng padding input */
+    font-size: 1.3em; /* Kích thước chữ input lớn hơn */
+    width: calc(100% - 50px);
+    margin-bottom: 30px;
+    border: 3px solid #ccc; /* Viền đậm hơn */
+    border-radius: 12px; /* Bo tròn input */
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    text-transform: uppercase; /* Đảm bảo chữ in hoa */
+}
+
+#guessInputContainer input[type="text"]:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 5px rgba(255, 87, 51, 0.4); /* Bóng đổ khi focus */
+}
+
+#guessInputContainer button {
+    padding: 18px 40px; /* Tăng padding nút */
+    font-size: 1.4em; /* Kích thước chữ nút lớn hơn */
+    background-color: var(--accent-color); /* Xanh dương điện */
+    color: white;
+    border: none;
+    border-radius: 12px; /* Bo tròn nút */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 5px 12px rgba(0,0,0,0.25);
+}
+
+#guessInputContainer button:hover {
+    background-color: #2A48CC;
+    transform: translateY(-4px);
+}
+
+#guessInputContainer button:active {
+    transform: translateY(0);
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* === Game Notification === */
+#gameNotification {
+    position: fixed;
+    top: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(33, 150, 243, 0.9); /* Độ trong suốt cao hơn */
+    color: var(--info-text-color);
+    padding: 20px 40px; /* Tăng padding */
+    border-radius: 12px; /* Bo tròn */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); /* Bóng đổ rõ hơn */
+    z-index: 1000;
+    font-size: 1.4em; /* Kích thước chữ lớn hơn */
+    font-weight: bold;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease-out, visibility 0.4s ease-out, transform 0.4s ease-out;
+    min-width: 350px;
+    text-align: center;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+}
+
+#gameNotification.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Notification types - Đảm bảo độ trong suốt cao hơn */
+#gameNotification.info { background-color: var(--info-bg-color); }
+#gameNotification.success { background-color: var(--success-bg-color); }
+#gameNotification.error { background-color: var(--error-bg-color); }
+#gameNotification.warning { background-color: var(--warning-bg-color); }
+
+/* === Footer === */
+footer {
+    margin-top: 35px;
+    padding: 25px; /* Tăng padding */
+    background-color: var(--secondary-color); /* Màu xanh lá chanh */
+    color: white;
+    text-align: center;
+    font-size: 1.1em; /* Kích thước chữ lớn hơn */
+    border-radius: 12px; /* Bo tròn */
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 1200px;
+    box-sizing: border-box;
+    font-weight: bold;
+}
+footer p {
+    margin: 0;
+}
+
+
+/* === Responsive Design === */
+@media (min-width: 768px) {
+    .main-content {
+        flex-direction: row;
+    }
+
+    .left-panel {
+        order: 1;
+        width: 65%;
+        flex-shrink: 0;
+    }
+
+    .right-panel {
+        order: 2;
+        width: 35%;
+        padding-left: 30px;
+        flex-shrink: 0;
+    }
+
+    #wheel-container {
+        width: 550px; /* Kích thước lớn hơn trên desktop */
+        height: 550px;
+    }
+
+    #spinButton {
+        width: 180px;
+        height: 180px;
+        font-size: 44px;
+    }
+
+    .letter-box {
+        width: 65px;
+        height: 65px;
+        font-size: 1.8em;
+    }
+}
+
+@media (max-width: 767px) {
+    body {
+        padding: 15px; /* Tăng nhẹ padding cho body trên mobile */
+    }
+    header h1 {
+        font-size: 2.5em; /* Giữ kích thước hợp lý cho mobile */
+    }
+    .main-content {
+        padding: 20px;
+        gap: 20px;
+    }
+    .left-panel, .right-panel {
+        padding: 20px;
+    }
+    #question {
+        font-size: 1.3em;
+        margin-bottom: 25px;
+        min-height: 60px;
+        padding: 18px;
+    }
+    .answer-container {
+        font-size: 28px;
+        margin-bottom: 30px;
+        gap: 8px;
+    }
+    .answer-group {
+        gap: 6px;
+    }
+    .letter-box {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5em;
+        border-width: 3px;
+    }
+    /* === CẬP NHẬT ĐIỀU CHỈNH BÁNH XE TRÊN ĐIỆN THOẠI === */
+    #wheel-container {
+        width: 280px; /* Giảm kích thước bánh xe */
+        height: 280px;
+        margin-bottom: 25px;
+        border-width: 15px; /* Giảm độ dày viền */
+    }
+    #spinButton {
+        width: 100px; /* Giảm kích thước nút quay */
+        height: 100px;
+        font-size: 24px; /* Giảm cỡ chữ nút quay */
+        border-width: 6px; /* Giảm độ dày viền nút */
+    }
+    /* === HẾT CẬP NHẬT === */
+
+    #resultOverlay {
+        font-size: 36px;
+        padding: 25px 40px;
+        min-width: 150px;
+    }
+    .player {
+        padding: 25px;
+        margin-bottom: 25px;
+        border-width: 4px;
+    }
+    .player h3 {
+        font-size: 1.9em;
+    }
+    .player p {
+        font-size: 1.5em;
+    }
+    #guessInputContainer {
+        margin-top: 30px;
+        padding: 25px;
+    }
+    #guessInputContainer label {
+        font-size: 1.3em;
+        margin-bottom: 20px;
+    }
+    #guessInputContainer input[type="text"] {
+        padding: 15px;
+        font-size: 1.2em;
+        width: calc(100% - 30px);
+    }
+    #guessInputContainer button {
+        padding: 15px 30px;
+        font-size: 1.3em;
+    }
+    /* Footer for mobile */
+    footer {
+        margin-top: 25px;
+        padding: 15px;
+        font-size: 1em;
+    }
+}
