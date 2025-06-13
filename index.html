@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chiếc Nón Kỳ Diệu</title>
+  <style>
+    :root {
+      --primary-color: #d63384; /* Màu chủ đạo hồng */
+      --secondary-color: #4CAF50; /* Màu xanh lá cho điểm */
+      --background-color: #f4f4f4;
+      --card-bg-color: #ffffff;
+      --border-color: #ddd;
+      --text-color: #333;
+      --dark-text-color: #555;
+      --font-family: 'Arial', sans-serif;
+
+      /* Colors for notifications */
+      --info-bg-color: #2196F3; /* Blue */
+      --info-text-color: white;
+      --success-bg-color: #4CAF50; /* Green */
+      --success-text-color: white;
+      --error-bg-color: #f44336; /* Red */
+      --error-text-color: white;
+      --warning-bg-color: #ff9800; /* Orange */
+      --warning-text-color: white;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--background-color);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start; /* Căn trên cùng */
+      min-height: 100vh;
+      box-sizing: border-box;
+      position: relative; /* Cho phép notification và nút nhạc định vị tuyệt đối */
+    }
+
+    .game-wrapper {
+      display: flex;
+      flex-direction: column; /* Mặc định cột cho màn hình nhỏ */
+      max-width: 1200px;
+      width: 100%;
+      background: var(--card-bg-color);
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    header {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 20px 0;
+      text-align: center;
+      border-bottom: 5px solid #bf2a73;
+      position: relative; /* Để chứa nút nhạc nếu muốn đặt trong header */
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+      letter-spacing: 1px;
+    }
+
+    /* Music Button - New position: fixed to bottom right */
+    #musicToggle {
+        position: fixed; /* Giữ nút luôn hiển thị */
+        bottom: 20px;
+        right: 20px;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1em;
+        font-weight: bold;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        z-index: 1001; /* Đảm bảo nút nằm trên cùng */
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    #musicToggle:hover {
+        background-color: #bf2a73;
+        transform: translateY(-2px);
+    }
+    #musicToggle:active {
+        transform: translateY(0);
+    }
+    #musicToggle.playing::before {
+        content: "🎵"; /* Ký tự nhạc */
+    }
+    #musicToggle.paused::before {
+        content: "🔇"; /* Ký tự tắt tiếng */
+    }
+
+
+    .main-content {
+      display: flex;
+      flex-direction: column; /* Mặc định cột */
+      padding: 30px;
+      gap: 30px;
+    }
+
+    .left-panel, .right-panel {
+      flex: 1;
+      padding: 20px;
+      border-radius: 10px;
+      background: var(--card-bg-color);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .left-panel {
+      order: 2; /* Đẩy xuống dưới cho mobile */
+    }
+
+    .right-panel {
+      order: 1; /* Đẩy lên trên cho mobile */
+    }
+
+    /* === Question & Answer Display === */
+    #question {
+      text-align: center;
+      font-size: 1.3em;
+      margin-bottom: 25px;
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--dark-text-color);
+      background-color: #e9f5f9;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .answer-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      font-size: 28px;
+      margin-bottom: 30px;
+    }
+
+    .answer-group {
+      display: flex;
+      gap: 5px;
+    }
+
+    .letter-box {
+      width: 50px;
+      height: 50px;
+      border: 2px solid var(--primary-color);
+      background-color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: var(--text-color);
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+      transition: background-color 0.3s ease;
+    }
+
+    .letter-box:not(:empty) {
+      background-color: #e0f7fa;
+    }
+    
+    /* === Wheel === */
+    #wheel-container {
+      position: relative;
+      width: 450px;
+      height: 450px;
+      margin: 0 auto 30px;
+      border-radius: 50%;
+      box-shadow: 0 0 30px rgba(0,0,0,0.15);
+      border: 20px solid var(--primary-color);
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    #wheel {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      position: relative;
+      background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+      transition: transform 5s cubic-bezier(0.33, 1, 0.68, 1);
+    }
+
+    .segment {
+      position: absolute;
+      width: 50%;
+      height: 50%;
+      top: 0;
+      left: 0;
+      transform-origin: 100% 100%;
+      background-color: #ccc;
+      clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      font-size: 1.1em;
+      font-weight: bold;
+      color: white;
+      border: 1px solid rgba(0,0,0,0.05);
+      box-sizing: border-box;
+      padding-left: 15%;
+      overflow: hidden;
+    }
+
+    .segment span {
+      display: block;
+      white-space: nowrap;
+      transform: rotate(45deg);
+      padding-top: 10px;
+    }
+
+    #spinButton {
+      position: absolute;
+      font-size: 32px;
+      font-weight: bold;
+      color: white;
+      background-color: var(--primary-color);
+      border: 8px solid #f0f0f0;
+      border-radius: 50%;
+      width: 130px;
+      height: 130px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      z-index: 10;
+      transition: background-color 0.3s ease, transform 0.1s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #spinButton:hover {
+      background-color: #bf2a73;
+      transform: scale(1.05);
+    }
+
+    #spinButton:active {
+      transform: scale(0.98);
+    }
+
+    #spinButton:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    #resultOverlay {
+      position: absolute;
+      font-size: 36px;
+      font-weight: bold;
+      text-align: center;
+      color: white;
+      background: rgba(0, 123, 255, 0.95);
+      padding: 20px 40px;
+      border-radius: 12px;
+      z-index: 99;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      min-width: 150px;
+      display: none;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    /* === Player Scoreboard === */
+    #players {
+      margin-bottom: 30px;
+    }
+
+    .player {
+      background: var(--card-bg-color);
+      padding: 20px;
+      border-radius: 12px;
+      border: 3px solid var(--border-color);
+      margin-bottom: 20px;
+      text-align: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    .player.active {
+      border-color: var(--primary-color);
+      background-color: #ffe6f0;
+      box-shadow: 0 0 15px rgba(214, 51, 132, 0.4);
+      transform: scale(1.03);
+    }
+
+    .player h3 {
+      margin: 0 0 10px;
+      font-size: 1.8em;
+      color: var(--text-color);
+    }
+
+    .player p {
+      font-size: 1.4em;
+      font-weight: bold;
+      color: var(--primary-color);
+      margin: 0;
+    }
+
+    /* === Guess Input === */
+    #guessInputContainer {
+      margin-top: 30px;
+      text-align: center;
+      display: none;
+      background: var(--card-bg-color);
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      border: 1px solid var(--border-color);
+    }
+
+    #guessInputContainer label {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: var(--dark-text-color);
+      margin-bottom: 15px;
+      display: block;
+    }
+
+    #guessInputContainer input[type="text"] {
+      padding: 12px 15px;
+      font-size: 1.1em;
+      width: calc(100% - 30px);
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease;
+    }
+
+    #guessInputContainer input[type="text"]:focus {
+      border-color: var(--primary-color);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(214, 51, 132, 0.2);
+    }
+
+    #guessInputContainer button {
+      padding: 12px 30px;
+      font-size: 1.2em;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.1s ease;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    }
+
+    #guessInputContainer button:hover {
+      background-color: #bf2a73;
+      transform: translateY(-2px);
+    }
+
+    #guessInputContainer button:active {
+      transform: translateY(0);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* === Game Notification === */
+    #gameNotification {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: var(--info-bg-color);
+        color: var(--info-text-color);
+        padding: 15px 30px;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        font-size: 1.2em;
+        font-weight: bold;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease-out, visibility 0.3s ease-out, transform 0.3s ease-out;
+        min-width: 250px;
+        text-align: center;
+    }
+
+    #gameNotification.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0);
+    }
+
+    /* Notification types */
+    #gameNotification.info { background-color: var(--info-bg-color); }
+    #gameNotification.success { background-color: var(--success-bg-color); }
+    #gameNotification.error { background-color: var(--error-bg-color); }
+    #gameNotification.warning { background-color: var(--warning-bg-color); }
+
+    /* === Responsive Design === */
+    @media (min-width: 768px) {
+      .main-content {
+        flex-direction: row;
+      }
+
+      .left-panel {
+        order: 1;
+        width: 65%;
+        flex-shrink: 0;
+      }
+
+      .right-panel {
+        order: 2;
+        width: 35%;
+        padding-left: 30px;
+        flex-shrink: 0;
+      }
+
+      #wheel-container {
+        width: 500px;
+        height: 500px;
+      }
+
+      #spinButton {
+        width: 150px;
+        height: 150px;
+        font-size: 36px;
+      }
+
+      .letter-box {
+        width: 55px;
+        height: 55px;
+        font-size: 1.6em;
+      }
+    }
+
+    @media (max-width: 767px) {
+        body {
+            padding: 10px;
+        }
+        header h1 {
+            font-size: 2em;
+        }
+        .main-content {
+            padding: 15px;
+            gap: 15px;
+        }
+        .left-panel, .right-panel {
+            padding: 15px;
+        }
+        #question {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            min-height: 45px;
+        }
+        .answer-container {
+            font-size: 20px;
+            margin-bottom: 20px;
+            gap: 5px;
+        }
+        .answer-group {
+            gap: 3px;
+        }
+        .letter-box {
+            width: 40px;
+            height: 40px;
+            font-size: 1.2em;
+            border-width: 1px;
+        }
+        #wheel-container {
+            width: 300px;
+            height: 300px;
+            margin-bottom: 20px;
+            border-width: 10px;
+        }
+        #spinButton {
+            width: 100px;
+            height: 100px;
+            font-size: 24px;
+            border-width: 5px;
+        }
+        #resultOverlay {
+            font-size: 28px;
+            padding: 15px 30px;
+            min-width: 100px;
+        }
+        .player {
+            padding: 15px;
+            margin-bottom: 15px;
+            border-width: 2px;
+        }
+        .player h3 {
+            font-size: 1.5em;
+        }
+        .player p {
+            font-size: 1.2em;
+        }
+        #guessInputContainer {
+            margin-top: 20px;
+            padding: 15px;
+        }
+        #guessInputContainer label {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        #guessInputContainer input[type="text"] {
+            padding: 10px;
+            font-size: 1em;
+            width: calc(100% - 20px);
+        }
+        #guessInputContainer button {
+            padding: 10px 20px;
+            font-size: 1.1em;
+        }
+    }
+  </style>
+</head>
+<body>
+  <div class="game-wrapper">
+    <header>
+      <h1>Chiếc Nón Kỳ Diệu</h1>
+    </header>
+
+    <div class="main-content">
+      <div class="right-panel">
+        <div id="players">
+          <div class="player active" id="player1">
+            <h3>Người Chơi</h3>
+            <p>Điểm: <span id="score1">0</span></p>
+          </div>
+        </div>
+
+        <div id="guessInputContainer">
+          <label for="guessLetter" id="guessInputLabel"><strong>Nhập ký tự:</strong></label>
+          <input type="text" id="guessLetter" maxlength="1" autofocus/>
+          <button onclick="submitGuess()">ĐOÁN</button>
+        </div>
+      </div>
+
+      <div class="left-panel">
+        <div id="question"></div>
+        <div class="answer-container" id="answerContainer"></div>
+
+        <div id="wheel-container">
+          <div id="wheel"></div>
+          <button id="spinButton" onclick="spinWheel()">QUAY</button>
+          <div id="resultOverlay"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="gameNotification" class="info"></div>
+  <button id="musicToggle" class="paused">Mở nhạc</button> <audio id="backgroundMusic" loop>
+    <source src="nhacnen.mp3" type="audio/mpeg">
+    Trình duyệt của bạn không hỗ trợ phần tử audio.
+  </audio>
+
+  <script src="questions.js"></script>
+  <script>
+    const segments = [
+      { text: "100", color: "#FEEF38" }, // Vàng
+      { text: "200", color: "#FF6B6B" }, // Đỏ nhạt
+      { text: "300", color: "#7DE2D1" }, // Xanh ngọc
+      { text: "400", color: "#FFD166" }, // Cam nhạt
+      { text: "500", color: "#BB86FC" }, // Tím
+      { text: "600", color: "#00C4B4" }, // Xanh lam
+      { text: "700", color: "#A8DADC" }, // Xanh dương nhạt
+      { text: "800", color: "#EDF5E1" }, // Xanh lá rất nhạt
+      { text: "900", color: "#FB6F92" }, // Hồng đậm
+      { text: "1000", color: "#007BFF" }, // Xanh biển
+      { text: "Mất lượt", color: "#DC3545" }, // Đỏ
+      { text: "Nhân đôi", color: "#28A745" }, // Xanh lá cây
+      { text: "Đoán chữ", color: "#FFC107" }  // Vàng cam
+    ];
+
+    const wheel = document.getElementById("wheel");
+    const resultOverlay = document.getElementById("resultOverlay");
+    const questionElement = document.getElementById("question");
+    const answerContainer = document.getElementById("answerContainer");
+    const guessInputContainer = document.getElementById("guessInputContainer");
+    const guessInput = document.getElementById("guessLetter");
+    const guessInputLabel = document.getElementById("guessInputLabel");
+    const guessSubmitBtn = document.querySelector("#guessInputContainer button");
+    const gameNotification = document.getElementById("gameNotification");
+
+    const backgroundMusic = document.getElementById("backgroundMusic");
+    const musicToggleBtn = document.getElementById("musicToggle");
+
+    let currentQuestionIndex = 0;
+    let currentQuestion;
+    let answer;
+    let plainAnswer;
+    let revealedLetters;
+    
+    let currentPlayer = 1;
+    let currentSpinValue = null;
+    let scores = [0];
+    let currentAngle = 0;
+    let spinning = false;
+
+    let isGuessingLetter = false;
+    let isGuessingFullAnswer = false;
+
+    // --- Chức năng nhạc nền ---
+    let isMusicPlaying = false; 
+    let hasUserInteracted = false; // Biến mới để theo dõi tương tác người dùng
+
+    function toggleMusic() {
+        // Nếu đây là lần tương tác đầu tiên với nút nhạc và nhạc đang tắt
+        if (!hasUserInteracted && !isMusicPlaying) {
+            backgroundMusic.volume = 0.5; // Đặt âm lượng
+            backgroundMusic.play().then(() => {
+                isMusicPlaying = true;
+                hasUserInteracted = true; // Đánh dấu đã có tương tác
+                musicToggleBtn.classList.remove('paused');
+                musicToggleBtn.classList.add('playing');
+                musicToggleBtn.textContent = 'Tắt nhạc';
+            }).catch(e => {
+                console.warn("Lỗi khi cố gắng phát nhạc lần đầu qua nút:", e);
+                showNotification("Trình duyệt chặn tự động phát nhạc. Vui lòng thử lại hoặc cho phép phát media.", 5000, 'error');
+                // Giữ nguyên trạng thái nút nếu phát không thành công
+            });
+        } else {
+            // Nếu nhạc đang phát, thì tạm dừng
+            if (isMusicPlaying) {
+                backgroundMusic.pause();
+                musicToggleBtn.classList.remove('playing');
+                musicToggleBtn.classList.add('paused');
+                musicToggleBtn.textContent = 'Mở nhạc';
+                isMusicPlaying = false;
+            } else { // Nếu nhạc đang tắt, thì phát
+                backgroundMusic.play().then(() => {
+                    isMusicPlaying = true;
+                    musicToggleBtn.classList.remove('paused');
+                    musicToggleBtn.classList.add('playing');
+                    musicToggleBtn.textContent = 'Tắt nhạc';
+                }).catch(e => {
+                    console.warn("Lỗi khi cố gắng phát nhạc qua nút:", e);
+                    showNotification("Không thể phát nhạc. Vui lòng kiểm tra cài đặt trình duyệt.", 5000, 'error');
+                });
+            }
+        }
+    }
+
+    musicToggleBtn.addEventListener('click', toggleMusic);
+
+    // Không cần xử lý DOMContentLoaded cho nhạc nữa, sẽ xử lý khi người dùng tương tác
+    // document.addEventListener('DOMContentLoaded', () => {
+    //    backgroundMusic.volume = 0.5;
+    // });
+
+    // --- Kết thúc chức năng nhạc nền ---
+
+    function showNotification(message, duration = 3000, type = 'info') {
+        if (gameNotification.timeoutId) {
+            clearTimeout(gameNotification.timeoutId);
+        }
+
+        gameNotification.textContent = message;
+        gameNotification.className = `info ${type}`;
+        gameNotification.classList.add('show');
+
+        gameNotification.timeoutId = setTimeout(() => {
+            gameNotification.classList.remove('show');
+            gameNotification.addEventListener('transitionend', function handler() {
+                gameNotification.className = 'info';
+                gameNotification.removeEventListener('transitionend', handler);
+            }, { once: true });
+        }, duration);
+    }
+
+    function initializeGame() {
+      if (allQuestions.length === 0) {
+        showNotification("Không có câu hỏi nào để hiển thị!", 5000, 'error');
+        return;
+      }
+
+      if (currentQuestionIndex >= allQuestions.length) {
+        endGame();
+        return;
+      }
+
+      currentQuestion = allQuestions[currentQuestionIndex];
+      answer = currentQuestion.answer;
+      plainAnswer = currentQuestion.plainAnswer;
+      revealedLetters = Array(answer.length).fill(null);
+
+      answer.forEach((char, index) => {
+        if (char === " ") {
+          revealedLetters[index] = char;
+        }
+      });
+
+      questionElement.innerHTML = `<strong>Câu hỏi:</strong> ${currentQuestion.question}`;
+      renderAnswerBoxes();
+      renderWheelSegments();
+      updateScores();
+      document.getElementById("spinButton").disabled = false;
+      guessInputContainer.style.display = "none";
+      resultOverlay.style.display = "none";
+
+      document.getElementById("player1").classList.add("active");
+      showNotification("Bắt đầu câu hỏi mới! Đến lượt bạn quay nón.");
+    }
+
+    function renderAnswerBoxes() {
+      answerContainer.innerHTML = '';
+      let currentGroup = document.createElement("div");
+      currentGroup.className = "answer-group";
+
+      answer.forEach((char, index) => {
+        if (char === " ") {
+          answerContainer.appendChild(currentGroup);
+          const spaceDiv = document.createElement("div");
+          spaceDiv.style.width = "20px";
+          answerContainer.appendChild(spaceDiv);
+          currentGroup = document.createElement("div");
+          currentGroup.className = "answer-group";
+        } else {
+          const box = document.createElement("div");
+          box.className = "letter-box";
+          box.id = `box-${index}`;
+          box.innerText = revealedLetters[index] || '';
+          currentGroup.appendChild(box);
+        }
+      });
+      if (currentGroup.children.length > 0) {
+        answerContainer.appendChild(currentGroup);
+      }
+    }
+
+    function renderWheelSegments() {
+      wheel.innerHTML = '';
+      const numSegments = segments.length;
+      const anglePerSegment = 360 / numSegments;
+
+      segments.forEach((seg, i) => {
+        const segmentDiv = document.createElement("div");
+        segmentDiv.className = "segment";
+        segmentDiv.style.backgroundColor = seg.color;
+        
+        const skewYValue = 90 - (anglePerSegment / 2);
+        segmentDiv.style.transform = `rotate(${i * anglePerSegment}deg) skewY(${skewYValue}deg)`;
+        segmentDiv.style.clipPath = `polygon(0% 0%, 100% 50%, 0% 100%)`;
+
+        const textSpan = document.createElement("span");
+        textSpan.innerText = seg.text;
+        textSpan.style.transform = `skewY(-${skewYValue}deg) rotate(${anglePerSegment / 2}deg)`;
+        segmentDiv.appendChild(textSpan);
+        wheel.appendChild(segmentDiv);
+      });
+    }
+
+    function spinWheel() {
+      if (spinning) return;
+      spinning = true;
+      document.getElementById("spinButton").disabled = true;
+      resultOverlay.style.display = "none";
+      guessInputContainer.style.display = "none";
+
+      // Phát nhạc ngay khi nhấn nút quay lần đầu tiên
+      if (!hasUserInteracted && !isMusicPlaying) {
+          backgroundMusic.volume = 0.5; // Đặt âm lượng
+          backgroundMusic.play().then(() => {
+              isMusicPlaying = true;
+              hasUserInteracted = true; // Đánh dấu đã có tương tác
+              musicToggleBtn.classList.remove('paused');
+              musicToggleBtn.classList.add('playing');
+              musicToggleBtn.textContent = 'Tắt nhạc';
+              showNotification("Nhạc đã được bật!", 2000, 'success');
+          }).catch(e => {
+              console.warn("Lỗi khi cố gắng phát nhạc lần đầu qua nút quay:", e);
+              showNotification("Trình duyệt chặn tự động phát nhạc. Vui lòng nhấn nút 'Mở nhạc' ở góc dưới để bật.", 5000, 'error');
+              // Giữ nguyên trạng thái nút nếu phát không thành công
+          });
+      }
+
+
+      const spinDegree = 3600 + Math.floor(Math.random() * 360);
+      currentAngle += spinDegree;
+      wheel.style.transition = "transform 5s cubic-bezier(0.33, 1, 0.68, 1)";
+      wheel.style.transform = `rotate(${currentAngle}deg)`;
+
+      setTimeout(() => {
+        const finalAngle = currentAngle % 360;
+        const index = Math.floor((360 - (finalAngle % 360)) / (360 / segments.length)) % segments.length;
+        const result = segments[index].text;
+
+        resultOverlay.innerText = result;
+        resultOverlay.style.background = segments[index].color;
+        resultOverlay.style.display = "block";
+
+        if (!isNaN(parseInt(result))) {
+          currentSpinValue = parseInt(result);
+          isGuessingLetter = true;
+          isGuessingFullAnswer = false;
+          updateGuessInputVisibility();
+          showNotification(`Kết quả: +${result}! Nhập chữ cái bạn muốn đoán.`, 3000, 'info');
+        } else if (result === "Nhân đôi") {
+          currentSpinValue = "double";
+          isGuessingLetter = true;
+          isGuessingFullAnswer = false;
+          updateGuessInputVisibility();
+          showNotification(`Kết quả: Nhân đôi! Nhập chữ cái bạn muốn đoán.`, 3000, 'info');
+        } else if (result === "Đoán chữ") {
+          isGuessingLetter = false;
+          isGuessingFullAnswer = true;
+          updateGuessInputVisibility();
+          showNotification(`Kết quả: Đoán chữ! Nhập toàn bộ đáp án.`, 3000, 'info');
+        } else { // Mất lượt
+          currentSpinValue = null;
+          isGuessingLetter = false;
+          isGuessingFullAnswer = false;
+          scores[0] -= 300;
+          if (scores[0] < 0) scores[0] = 0;
+          updateScores();
+          showNotification(`${result}! Bạn bị trừ 300 điểm.`, 3000, 'warning');
+          document.getElementById("spinButton").disabled = false;
+          setTimeout(() => { resultOverlay.style.display = "none"; }, 1500);
+        }
+
+        spinning = false;
+
+        if (isGuessingLetter || isGuessingFullAnswer) {
+            setTimeout(() => { resultOverlay.style.display = "none"; }, 1500);
+        }
+
+      }, 5000);
+    }
+
+    function updateGuessInputVisibility() {
+      guessInputContainer.style.display = "block";
+      guessInput.value = "";
+      guessInput.focus();
+
+      if (isGuessingLetter) {
+        guessInputLabel.innerText = "Nhập ký tự (1 chữ):";
+        guessInput.maxLength = "1"; // Giới hạn 1 ký tự
+        guessInput.placeholder = "Nhập một chữ cái...";
+        guessSubmitBtn.innerText = "ĐOÁN CHỮ";
+      } else if (isGuessingFullAnswer) {
+        guessInputLabel.innerText = "Nhập toàn bộ đáp án:";
+        guessInput.removeAttribute("maxlength"); // Xóa bỏ giới hạn maxlength
+        guessInput.placeholder = "Nhập toàn bộ đáp án...";
+        guessSubmitBtn.innerText = "ĐOÁN TOÀN BỘ";
+      } else {
+        guessInputContainer.style.display = "none";
+      }
+    }
+
+    function submitGuess() {
+      const guess = guessInput.value.toUpperCase().trim();
+      if (!guess) {
+        showNotification('Vui lòng nhập nội dung đoán.', 3000, 'warning');
+        return;
+      }
+
+      if (isGuessingLetter) {
+        if (guess.length !== 1) {
+            showNotification('Vui lòng chỉ nhập 1 ký tự để đoán chữ cái.', 3000, 'warning');
+            return;
+        }
+        processLetterGuess(guess);
+      } else if (isGuessingFullAnswer) {
+        processFullAnswerGuess(guess);
+      }
+      
+      guessInputContainer.style.display = "none";
+      document.getElementById("spinButton").disabled = false;
+    }
+
+    function processLetterGuess(letter) {
+      const inputPlain = letter.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      let matched = 0;
+      
+      for (let i = 0; i < plainAnswer.length; i++) {
+        if (plainAnswer[i] === inputPlain && revealedLetters[i] === null) {
+          revealedLetters[i] = answer[i];
+          document.getElementById(`box-${i}`).innerText = answer[i];
+          matched++;
+        }
+      }
+
+      if (matched > 0) {
+        let earned = 0;
+        if (currentSpinValue === "double") {
+          earned = matched * 2 * 200;
+          showNotification(`Chính xác! Bạn đoán đúng ${matched} chữ. Được x2 điểm, nhận +${earned} điểm.`, 3000, 'success');
+        } else {
+          earned = matched * currentSpinValue;
+          showNotification(`Chính xác! Bạn đoán đúng ${matched} chữ. Nhận +${earned} điểm.`, 3000, 'success');
+        }
+        scores[0] += earned;
+      } else {
+        scores[0] -= 300;
+        if (scores[0] < 0) scores[0] = 0;
+        showNotification(`Sai rồi! Bạn đoán chữ '${letter}' không có hoặc đã mở. Bị trừ 300 điểm.`, 3000, 'error');
+      }
+      updateScores();
+      isGuessingLetter = false;
+      checkGameCompletion();
+    }
+
+    function processFullAnswerGuess(guess) {
+      // Chuyển đổi cả đoán của người dùng và đáp án đúng về dạng không dấu, không khoảng trắng để so sánh
+      const normalizedGuess = guess.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s/g, '');
+      const normalizedCorrectAnswer = plainAnswer.filter(char => char !== " ").join("");
+
+      if (normalizedGuess === normalizedCorrectAnswer) {
+          const hiddenLettersCount = revealedLetters.filter(l => l === null).length;
+          let earned = hiddenLettersCount * 100; // Thưởng 100 điểm cho mỗi chữ cái chưa mở
+          scores[0] += earned;
+          
+          // Mở tất cả các chữ cái còn lại
+          for (let i = 0; i < answer.length; i++) {
+              if (revealedLetters[i] === null) {
+                  revealedLetters[i] = answer[i];
+                  document.getElementById(`box-${i}`).innerText = answer[i];
+              }
+          }
+          showNotification(`Chính xác! Bạn đoán đúng toàn bộ đáp án. Nhận +${earned} điểm.`, 3000, 'success');
+          updateScores();
+          checkGameCompletion();
+      } else {
+          scores[0] -= 300;
+          if (scores[0] < 0) scores[0] = 0;
+          showNotification(`Sai rồi! Bạn đoán sai toàn bộ đáp án. Bị trừ 300 điểm.`, 3000, 'error');
+      }
+      updateScores();
+      isGuessingFullAnswer = false;
+    }
+
+    function updateScores() {
+      document.getElementById("score1").innerText = scores[0];
+    }
+
+    function checkGameCompletion() {
+      const allLetterBoxesFilled = revealedLetters.every(char => char !== null);
+
+      if (allLetterBoxesFilled) {
+        showNotification("Tất cả các ô đã được mở! Chuyển sang câu hỏi tiếp theo.", 3000, 'info');
+        currentQuestionIndex++;
+        setTimeout(() => {
+          initializeGame();
+        }, 2000); 
+      }
+    }
+
+    function endGame() {
+      const finalScore = scores[0];
+      
+      document.getElementById("player1").classList.remove("active");
+      document.querySelector("#player1 h3").innerText = "Trò chơi kết thúc!";
+      document.querySelector("#player1 p").innerText = "Điểm cuối cùng của bạn: " + finalScore;
+      
+      document.getElementById("spinButton").disabled = true;
+      guessInputContainer.style.display = "none";
+      resultOverlay.style.display = "none";
+      showNotification("Trò chơi đã kết thúc! Tổng điểm của bạn là: " + finalScore + ". Cảm ơn bạn đã tham gia.", 5000, 'info');
+    }
+
+    initializeGame();
+  </script>
+</body>
+</html>
