@@ -204,11 +204,17 @@ header h1 {
     text-transform: uppercase; /* Đảm bảo chữ in hoa */
 }
 
-.letter-box:not(:empty) {
+.letter-box.revealed { /* Class mới cho chữ đã được tiết lộ */
     background-color: var(--secondary-color); /* Xanh lá chanh khi đã mở */
     color: white; /* Chữ trắng khi đã mở */
     transform: scale(1.1); /* Hiệu ứng nổi bật rõ hơn */
     border-color: var(--accent-color); /* Viền xanh dương khi đã mở */
+}
+
+/* Khoảng cách giữa các từ */
+.word-space {
+    width: 30px; /* Tăng khoảng cách giữa các từ */
+    height: 65px; /* Giữ chiều cao tương đương ô chữ */
 }
 
 /* === Wheel === */
@@ -377,7 +383,7 @@ header h1 {
 #guessInputContainer {
     margin-top: 45px;
     text-align: center;
-    display: none;
+    display: none; /* Ban đầu ẩn */
     background: var(--card-bg-color);
     padding: 35px;
     border-radius: 20px;
@@ -411,16 +417,25 @@ header h1 {
     box-shadow: 0 0 0 5px rgba(255, 87, 51, 0.4); /* Bóng đổ khi focus */
 }
 
+.guess-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Khoảng cách giữa các nút */
+    flex-wrap: wrap; /* Cho phép xuống dòng trên màn hình nhỏ */
+}
+
 #guessInputContainer button {
-    padding: 18px 40px; /* Tăng padding nút */
-    font-size: 1.4em; /* Kích thước chữ nút lớn hơn */
+    padding: 18px 30px; /* Tăng padding nút */
+    font-size: 1.2em; /* Kích thước chữ nút lớn hơn */
     background-color: var(--accent-color); /* Xanh dương điện */
     color: white;
     border: none;
     border-radius: 12px; /* Bo tròn nút */
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.1s ease;
+    transition: background-color 0.3s ease, transform 0.1s ease, opacity 0.3s ease;
     box-shadow: 0 5px 12px rgba(0,0,0,0.25);
+    flex-grow: 1; /* Cho phép nút giãn ra */
+    max-width: 250px; /* Giới hạn chiều rộng nút */
 }
 
 #guessInputContainer button:hover {
@@ -431,6 +446,28 @@ header h1 {
 #guessInputContainer button:active {
     transform: translateY(0);
 }
+
+#buyLetterButton { /* Style riêng cho nút mua chữ */
+    background-color: #673AB7; /* Màu tím đậm cho nút mua chữ */
+    padding: 18px 25px;
+    font-size: 1.1em;
+}
+
+#buyLetterButton:hover {
+    background-color: #512DA8;
+}
+
+#buyLetterButton.disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+    box-shadow: none;
+    transform: none; /* Bỏ hiệu ứng hover/active khi disabled */
+}
+#buyLetterButton.disabled:hover {
+    background-color: #cccccc; /* Giữ màu xám khi hover disabled */
+}
+
 
 .hidden {
     display: none !important;
@@ -605,9 +642,15 @@ footer p {
         font-size: 1.2em;
         width: calc(100% - 30px);
     }
+    .guess-buttons { /* Điều chỉnh trên mobile */
+        flex-direction: column;
+        gap: 15px;
+    }
     #guessInputContainer button {
-        padding: 15px 30px;
-        font-size: 1.3em;
+        padding: 15px 25px;
+        font-size: 1.1em;
+        width: 100%; /* Đảm bảo nút chiếm toàn bộ chiều rộng */
+        max-width: none; /* Bỏ giới hạn max-width */
     }
     /* Footer for mobile */
     footer {
