@@ -32,8 +32,9 @@
       margin: 0;
       padding: 20px;
       display: flex;
+      flex-direction: column; /* Đặt lại thành cột để footer nằm dưới */
       justify-content: center;
-      align-items: flex-start; /* Căn trên cùng */
+      align-items: center; /* Căn giữa theo chiều ngang */
       min-height: 100vh;
       box-sizing: border-box;
       position: relative; /* Cho phép notification và nút nhạc định vị tuyệt đối */
@@ -48,6 +49,7 @@
       border-radius: 12px;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
       overflow: hidden;
+      margin-bottom: 20px; /* Thêm khoảng cách với footer */
     }
 
     header {
@@ -208,7 +210,7 @@
       clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
       display: flex;
       align-items: center;
-      justify-content: flex-start;
+      justify: flex-start;
       font-size: 1.1em;
       font-weight: bold;
       color: white;
@@ -414,6 +416,22 @@
     #gameNotification.error { background-color: var(--error-bg-color); }
     #gameNotification.warning { background-color: var(--warning-bg-color); }
 
+    /* === Footer === */
+    footer {
+        margin-top: 30px; /* Khoảng cách từ game-wrapper */
+        padding: 15px;
+        background-color: var(--primary-color);
+        color: white;
+        text-align: center;
+        font-size: 0.9em;
+        border-radius: 8px;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 1200px; /* Đồng bộ với chiều rộng game-wrapper */
+        box-sizing: border-box; /* Đảm bảo padding không làm tăng width */
+    }
+
+
     /* === Responsive Design === */
     @media (min-width: 768px) {
       .main-content {
@@ -529,6 +547,12 @@
             padding: 10px 20px;
             font-size: 1.1em;
         }
+        /* Footer for mobile */
+        footer {
+            margin-top: 15px;
+            padding: 10px;
+            font-size: 0.8em;
+        }
     }
   </style>
 </head>
@@ -568,7 +592,11 @@
   </div>
 
   <div id="gameNotification" class="info"></div>
-  <button id="musicToggle" class="paused">Mở nhạc</button> <audio id="backgroundMusic" loop>
+  <button id="musicToggle" class="paused">Mở nhạc</button> <footer>
+    <p>&copy;2025 - Lớp học 0 đồng Trung Bình A3</p>
+  </footer>
+
+  <audio id="backgroundMusic" loop>
     <source src="nhacnen.mp3" type="audio/mpeg">
     Trình duyệt của bạn không hỗ trợ phần tử audio.
   </audio>
@@ -661,11 +689,6 @@
     }
 
     musicToggleBtn.addEventListener('click', toggleMusic);
-
-    // Không cần xử lý DOMContentLoaded cho nhạc nữa, sẽ xử lý khi người dùng tương tác
-    // document.addEventListener('DOMContentLoaded', () => {
-    //    backgroundMusic.volume = 0.5;
-    // });
 
     // --- Kết thúc chức năng nhạc nền ---
 
