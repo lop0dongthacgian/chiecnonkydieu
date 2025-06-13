@@ -3,564 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chiếc Nón Kỳ Diệu</title>
-  <style>
-    :root {
-      --primary-color: #d63384; /* Màu chủ đạo hồng */
-      --secondary-color: #4CAF50; /* Màu xanh lá cho điểm */
-      --background-color: #f4f4f4;
-      --card-bg-color: #ffffff;
-      --border-color: #ddd;
-      --text-color: #333;
-      --dark-text-color: #555;
-      --font-family: 'Arial', sans-serif;
-
-      /* Colors for notifications */
-      --info-bg-color: #2196F3; /* Blue */
-      --info-text-color: white;
-      --success-bg-color: #4CAF50; /* Green */
-      --success-text-color: white;
-      --error-bg-color: #f44336; /* Red */
-      --error-text-color: white;
-      --warning-bg-color: #ff9800; /* Orange */
-      --warning-text-color: white;
-
-      /* New color for music button */
-      --music-button-color: #007bff; /* Màu xanh dương cho nút nhạc */
-      --music-button-hover-color: #0056b3; /* Màu xanh đậm hơn khi hover */
-    }
-
-    body {
-      font-family: var(--font-family);
-      background-color: var(--background-color);
-      margin: 0;
-      padding: 20px;
-      display: flex;
-      flex-direction: column; /* Đặt lại thành cột để footer nằm dưới */
-      justify-content: center;
-      align-items: center; /* Căn giữa theo chiều ngang */
-      min-height: 100vh;
-      box-sizing: border-box;
-      position: relative; /* Cho phép notification và nút nhạc định vị tuyệt đối */
-    }
-
-    .game-wrapper {
-      display: flex;
-      flex-direction: column; /* Mặc định cột cho màn hình nhỏ */
-      max-width: 1200px;
-      width: 100%;
-      background: var(--card-bg-color);
-      border-radius: 12px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-      margin-bottom: 20px; /* Thêm khoảng cách với footer */
-    }
-
-    header {
-      background-color: var(--primary-color);
-      color: white;
-      padding: 20px 0;
-      text-align: center;
-      border-bottom: 5px solid #bf2a73;
-      position: relative; /* Để chứa nút nhạc nếu muốn đặt trong header */
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 2.5em;
-      letter-spacing: 1px;
-    }
-
-    /* Music Button - New position: fixed to bottom right */
-    #musicToggle {
-        position: fixed; /* Giữ nút luôn hiển thị */
-        bottom: 20px; /* Vị trí so với đáy trang */
-        right: 20px; /* Vị trí so với lề phải */
-        background-color: var(--music-button-color); /* Màu xanh dương mới */
-        color: white;
-        border: none;
-        padding: 10px 15px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 1em;
-        font-weight: bold;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        z-index: 1001; /* Đảm bảo nút nằm trên cùng */
-        transition: background-color 0.3s ease, transform 0.2s ease, opacity 0.3s ease; /* Thêm opacity vào transition */
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        opacity: 0.7; /* Độ trong suốt */
-    }
-    #musicToggle:hover {
-        background-color: var(--music-button-hover-color); /* Màu xanh đậm hơn khi hover */
-        transform: translateY(-2px);
-        opacity: 1; /* Hiển thị rõ hơn khi hover */
-    }
-    #musicToggle:active {
-        transform: translateY(0);
-    }
-    #musicToggle.playing::before {
-        content: "🎵"; /* Ký tự nhạc */
-    }
-    #musicToggle.paused::before {
-        content: "🔇"; /* Ký tự tắt tiếng */
-    }
-
-
-    .main-content {
-      display: flex;
-      flex-direction: column; /* Mặc định cột */
-      padding: 30px;
-      gap: 30px;
-    }
-
-    .left-panel, .right-panel {
-      flex: 1;
-      padding: 20px;
-      border-radius: 10px;
-      background: var(--card-bg-color);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    }
-
-    .left-panel {
-      order: 2; /* Đẩy xuống dưới cho mobile */
-    }
-
-    .right-panel {
-      order: 1; /* Đẩy lên trên cho mobile */
-    }
-
-    /* === Question & Answer Display === */
-    #question {
-      text-align: center;
-      font-size: 1.3em;
-      margin-bottom: 25px;
-      min-height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--dark-text-color);
-      background-color: #e9f5f9;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
-    }
-
-    .answer-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      font-size: 28px;
-      margin-bottom: 30px;
-    }
-
-    .answer-group {
-      display: flex;
-      gap: 5px;
-    }
-
-    .letter-box {
-      width: 50px;
-      height: 50px;
-      border: 2px solid var(--primary-color);
-      background-color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      color: var(--text-color);
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
-      transition: background-color 0.3s ease;
-    }
-
-    .letter-box:not(:empty) {
-      background-color: #e0f7fa;
-    }
-    
-    /* === Wheel === */
-    #wheel-container {
-      position: relative;
-      width: 450px;
-      height: 450px;
-      margin: 0 auto 30px;
-      border-radius: 50%;
-      box-shadow: 0 0 30px rgba(0,0,0,0.15);
-      border: 20px solid var(--primary-color);
-      box-sizing: border-box;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    #wheel {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      position: relative;
-      background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
-      transition: transform 5s cubic-bezier(0.33, 1, 0.68, 1);
-    }
-
-    .segment {
-      position: absolute;
-      width: 50%;
-      height: 50%;
-      top: 0;
-      left: 0;
-      transform-origin: 100% 100%;
-      background-color: #ccc;
-      clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
-      display: flex;
-      align-items: center;
-      justify: flex-start;
-      font-size: 1.1em;
-      font-weight: bold;
-      color: white;
-      border: 1px solid rgba(0,0,0,0.05);
-      box-sizing: border-box;
-      padding-left: 15%;
-      overflow: hidden;
-    }
-
-    .segment span {
-      display: block;
-      white-space: nowrap;
-      transform: rotate(45deg);
-      padding-top: 10px;
-    }
-
-    #spinButton {
-      position: absolute;
-      font-size: 32px;
-      font-weight: bold;
-      color: white;
-      background-color: var(--primary-color);
-      border: 8px solid #f0f0f0;
-      border-radius: 50%;
-      width: 130px;
-      height: 130px;
-      cursor: pointer;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-      z-index: 10;
-      transition: background-color 0.3s ease, transform 0.1s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    #spinButton:hover {
-      background-color: #bf2a73;
-      transform: scale(1.05);
-    }
-
-    #spinButton:active {
-      transform: scale(0.98);
-    }
-
-    #spinButton:disabled {
-      background-color: #cccccc;
-      cursor: not-allowed;
-      box-shadow: none;
-    }
-
-    #resultOverlay {
-      position: absolute;
-      font-size: 36px;
-      font-weight: bold;
-      text-align: center;
-      color: white;
-      background: rgba(0, 123, 255, 0.95);
-      padding: 20px 40px;
-      border-radius: 12px;
-      z-index: 99;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      min-width: 150px;
-      display: none;
-      box-shadow: 0 0 20px rgba(0,0,0,0.4);
-      animation: fadeIn 0.5s ease-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    }
-
-    /* === Player Scoreboard === */
-    #players {
-      margin-bottom: 30px;
-    }
-
-    .player {
-      background: var(--card-bg-color);
-      padding: 20px;
-      border-radius: 12px;
-      border: 3px solid var(--border-color);
-      margin-bottom: 20px;
-      text-align: center;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    }
-
-    .player.active {
-      border-color: var(--primary-color);
-      background-color: #ffe6f0;
-      box-shadow: 0 0 15px rgba(214, 51, 132, 0.4);
-      transform: scale(1.03);
-    }
-
-    .player h3 {
-      margin: 0 0 10px;
-      font-size: 1.8em;
-      color: var(--text-color);
-    }
-
-    .player p {
-      font-size: 1.4em;
-      font-weight: bold;
-      color: var(--primary-color);
-      margin: 0;
-    }
-
-    /* === Guess Input === */
-    #guessInputContainer {
-      margin-top: 30px;
-      text-align: center;
-      display: none;
-      background: var(--card-bg-color);
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      border: 1px solid var(--border-color);
-    }
-
-    #guessInputContainer label {
-      font-size: 1.2em;
-      font-weight: bold;
-      color: var(--dark-text-color);
-      margin-bottom: 15px;
-      display: block;
-    }
-
-    #guessInputContainer input[type="text"] {
-      padding: 12px 15px;
-      font-size: 1.1em;
-      width: calc(100% - 30px);
-      margin-bottom: 20px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      box-sizing: border-box;
-      transition: border-color 0.3s ease;
-    }
-
-    #guessInputContainer input[type="text"]:focus {
-      border-color: var(--primary-color);
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(214, 51, 132, 0.2);
-    }
-
-    #guessInputContainer button {
-      padding: 12px 30px;
-      font-size: 1.2em;
-      background-color: var(--primary-color);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.1s ease;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-    }
-
-    #guessInputContainer button:hover {
-      background-color: #bf2a73;
-      transform: translateY(-2px);
-    }
-
-    #guessInputContainer button:active {
-      transform: translateY(0);
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    /* === Game Notification === */
-    #gameNotification {
-        position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: var(--info-bg-color);
-        color: var(--info-text-color);
-        padding: 15px 30px;
-        border-radius: 8px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        z-index: 1000;
-        font-size: 1.2em;
-        font-weight: bold;
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.3s ease-out, visibility 0.3s ease-out, transform 0.3s ease-out;
-        min-width: 250px;
-        text-align: center;
-    }
-
-    #gameNotification.show {
-        opacity: 1;
-        visibility: visible;
-        transform: translateX(-50%) translateY(0);
-    }
-
-    /* Notification types */
-    #gameNotification.info { background-color: var(--info-bg-color); }
-    #gameNotification.success { background-color: var(--success-bg-color); }
-    #gameNotification.error { background-color: var(--error-bg-color); }
-    #gameNotification.warning { background-color: var(--warning-bg-color); }
-
-    /* === Footer === */
-    footer {
-        margin-top: 30px; /* Khoảng cách từ game-wrapper */
-        padding: 15px;
-        background-color: var(--primary-color);
-        color: white;
-        text-align: center;
-        font-size: 0.9em;
-        border-radius: 8px;
-        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-        width: 100%;
-        max-width: 1200px; /* Đồng bộ với chiều rộng game-wrapper */
-        box-sizing: border-box; /* Đảm bảo padding không làm tăng width */
-    }
-
-
-    /* === Responsive Design === */
-    @media (min-width: 768px) {
-      .main-content {
-        flex-direction: row;
-      }
-
-      .left-panel {
-        order: 1;
-        width: 65%;
-        flex-shrink: 0;
-      }
-
-      .right-panel {
-        order: 2;
-        width: 35%;
-        padding-left: 30px;
-        flex-shrink: 0;
-      }
-
-      #wheel-container {
-        width: 500px;
-        height: 500px;
-      }
-
-      #spinButton {
-        width: 150px;
-        height: 150px;
-        font-size: 36px;
-      }
-
-      .letter-box {
-        width: 55px;
-        height: 55px;
-        font-size: 1.6em;
-      }
-    }
-
-    @media (max-width: 767px) {
-        body {
-            padding: 10px;
-        }
-        header h1 {
-            font-size: 2em;
-        }
-        .main-content {
-            padding: 15px;
-            gap: 15px;
-        }
-        .left-panel, .right-panel {
-            padding: 15px;
-        }
-        #question {
-            font-size: 1.1em;
-            margin-bottom: 15px;
-            min-height: 45px;
-        }
-        .answer-container {
-            font-size: 20px;
-            margin-bottom: 20px;
-            gap: 5px;
-        }
-        .answer-group {
-            gap: 3px;
-        }
-        .letter-box {
-            width: 40px;
-            height: 40px;
-            font-size: 1.2em;
-            border-width: 1px;
-        }
-        #wheel-container {
-            width: 300px;
-            height: 300px;
-            margin-bottom: 20px;
-            border-width: 10px;
-        }
-        #spinButton {
-            width: 100px;
-            height: 100px;
-            font-size: 24px;
-            border-width: 5px;
-        }
-        #resultOverlay {
-            font-size: 28px;
-            padding: 15px 30px;
-            min-width: 100px;
-        }
-        .player {
-            padding: 15px;
-            margin-bottom: 15px;
-            border-width: 2px;
-        }
-        .player h3 {
-            font-size: 1.5em;
-        }
-        .player p {
-            font-size: 1.2em;
-        }
-        #guessInputContainer {
-            margin-top: 20px;
-            padding: 15px;
-        }
-        #guessInputContainer label {
-            font-size: 1.1em;
-            margin-bottom: 10px;
-        }
-        #guessInputContainer input[type="text"] {
-            padding: 10px;
-            font-size: 1em;
-            width: calc(100% - 20px);
-        }
-        #guessInputContainer button {
-            padding: 10px 20px;
-            font-size: 1.1em;
-        }
-        /* Footer for mobile */
-        footer {
-            margin-top: 15px;
-            padding: 10px;
-            font-size: 0.8em;
-        }
-    }
-  </style>
+  <title>Chiếc Nón Kỳ Diệu - Family & Friends</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="game-wrapper">
@@ -598,8 +42,10 @@
   </div>
 
   <div id="gameNotification" class="info"></div>
-  <button id="musicToggle" class="paused">Mở nhạc</button> <footer>
-    <p>&copy;2025 - Lớp học 0 đồng Trung Bình A3</p>
+  <button id="musicToggle" class="paused">Mở nhạc</button>
+
+  <footer>
+    <p>&copy; 2025 - Lớp học 0 đồng Trung Bình A3</p>
   </footer>
 
   <audio id="backgroundMusic" loop>
@@ -610,19 +56,19 @@
   <script src="questions.js"></script>
   <script>
     const segments = [
-      { text: "100", color: "#FEEF38" }, // Vàng
-      { text: "200", color: "#FF6B6B" }, // Đỏ nhạt
-      { text: "300", color: "#7DE2D1" }, // Xanh ngọc
-      { text: "400", color: "#FFD166" }, // Cam nhạt
-      { text: "500", color: "#BB86FC" }, // Tím
-      { text: "600", color: "#00C4B4" }, // Xanh lam
-      { text: "700", color: "#A8DADC" }, // Xanh dương nhạt
-      { text: "800", color: "#EDF5E1" }, // Xanh lá rất nhạt
-      { text: "900", color: "#FB6F92" }, // Hồng đậm
-      { text: "1000", color: "#007BFF" }, // Xanh biển
-      { text: "Mất lượt", color: "#DC3545" }, // Đỏ
-      { text: "Nhân đôi", color: "#28A745" }, // Xanh lá cây
-      { text: "Đoán chữ", color: "#FFC107" }  // Vàng cam
+      { text: "100", color: "#FFD700" }, // Vàng (Gold)
+      { text: "200", color: "#FF6347" }, // Đỏ cà chua (Tomato)
+      { text: "300", color: "#6A5ACD" }, // Xanh tím (SlateBlue)
+      { text: "400", color: "#32CD32" }, // Xanh lá chanh (LimeGreen)
+      { text: "500", color: "#1E90FF" }, // Xanh dương đậm (DodgerBlue)
+      { text: "600", color: "#FF1493" }, // Hồng đậm (DeepPink)
+      { text: "700", color: "#BA55D3" }, // Tím nhạt (MediumOrchid)
+      { text: "800", color: "#00CED1" }, // Xanh ngọc lam (DarkTurquoise)
+      { text: "900", color: "#FFA500" }, // Cam (Orange)
+      { text: "1000", color: "#8B008B" }, // Tím đậm (DarkMagenta)
+      { text: "Mất lượt", color: "#FF4500" }, // Cam đỏ (OrangeRed)
+      { text: "Nhân đôi", color: "#ADFF2F" }, // Xanh lá cây vàng (GreenYellow)
+      { text: "Đoán chữ", color: "#FFFF00" }  // Vàng tinh khiết (Yellow)
     ];
 
     const wheel = document.getElementById("wheel");
@@ -638,7 +84,6 @@
     const backgroundMusic = document.getElementById("backgroundMusic");
     const musicToggleBtn = document.getElementById("musicToggle");
 
-    let currentQuestionIndex; // Không dùng biến này nữa, thay bằng questionOrder
     let currentQuestion;
     let answer;
     let plainAnswer;
@@ -662,29 +107,26 @@
     let hasUserInteracted = false; // Biến mới để theo dõi tương tác người dùng
 
     function toggleMusic() {
-        // Nếu đây là lần tương tác đầu tiên với nút nhạc và nhạc đang tắt
         if (!hasUserInteracted && !isMusicPlaying) {
-            backgroundMusic.volume = 0.5; // Đặt âm lượng
+            backgroundMusic.volume = 0.5;
             backgroundMusic.play().then(() => {
                 isMusicPlaying = true;
-                hasUserInteracted = true; // Đánh dấu đã có tương tác
+                hasUserInteracted = true;
                 musicToggleBtn.classList.remove('paused');
                 musicToggleBtn.classList.add('playing');
                 musicToggleBtn.textContent = 'Tắt nhạc';
             }).catch(e => {
                 console.warn("Lỗi khi cố gắng phát nhạc lần đầu qua nút:", e);
                 showNotification("Trình duyệt chặn tự động phát nhạc. Vui lòng thử lại hoặc cho phép phát media.", 5000, 'error');
-                // Giữ nguyên trạng thái nút nếu phát không thành công
             });
         } else {
-            // Nếu nhạc đang phát, thì tạm dừng
             if (isMusicPlaying) {
                 backgroundMusic.pause();
                 musicToggleBtn.classList.remove('playing');
                 musicToggleBtn.classList.add('paused');
                 musicToggleBtn.textContent = 'Mở nhạc';
                 isMusicPlaying = false;
-            } else { // Nếu nhạc đang tắt, thì phát
+            } else {
                 backgroundMusic.play().then(() => {
                     isMusicPlaying = true;
                     musicToggleBtn.classList.remove('paused');
@@ -699,8 +141,6 @@
     }
 
     musicToggleBtn.addEventListener('click', toggleMusic);
-
-    // --- Kết thúc chức năng nhạc nền ---
 
     function showNotification(message, duration = 3000, type = 'info') {
         if (gameNotification.timeoutId) {
@@ -720,26 +160,21 @@
         }, duration);
     }
 
-    // --- Hàm mới để lấy câu hỏi ngẫu nhiên không lặp lại ---
     function getRandomQuestionIndex() {
         if (availableQuestionIndices.length === 0) {
-            // Nếu đã hỏi hết tất cả các câu, có thể reset lại hoặc kết thúc trò chơi
-            return -1; // Đánh dấu đã hết câu hỏi
+            return -1;
         }
         const randomIndex = Math.floor(Math.random() * availableQuestionIndices.length);
-        const questionActualIndex = availableQuestionIndices.splice(randomIndex, 1)[0]; // Lấy và loại bỏ khỏi danh sách
-        askedQuestionIndices.push(questionActualIndex); // Thêm vào danh sách đã hỏi
+        const questionActualIndex = availableQuestionIndices.splice(randomIndex, 1)[0];
+        askedQuestionIndices.push(questionActualIndex);
         return questionActualIndex;
     }
 
     function initializeGame() {
       if (availableQuestionIndices.length === 0 && askedQuestionIndices.length === 0) {
-          // Lần đầu tiên chạy hoặc đã chơi xong hết các câu trước đó
           for (let i = 0; i < allQuestions.length; i++) {
               availableQuestionIndices.push(i);
           }
-          // Xáo trộn availableQuestionIndices nếu muốn (tùy chọn)
-          // availableQuestionIndices.sort(() => Math.random() - 0.5); 
       }
 
       const nextQuestionActualIndex = getRandomQuestionIndex();
@@ -827,12 +262,11 @@
       resultOverlay.style.display = "none";
       guessInputContainer.style.display = "none";
 
-      // Phát nhạc ngay khi nhấn nút quay lần đầu tiên
       if (!hasUserInteracted && !isMusicPlaying) {
-          backgroundMusic.volume = 0.5; // Đặt âm lượng
+          backgroundMusic.volume = 0.5;
           backgroundMusic.play().then(() => {
               isMusicPlaying = true;
-              hasUserInteracted = true; // Đánh dấu đã có tương tác
+              hasUserInteracted = true;
               musicToggleBtn.classList.remove('paused');
               musicToggleBtn.classList.add('playing');
               musicToggleBtn.textContent = 'Tắt nhạc';
@@ -840,7 +274,6 @@
           }).catch(e => {
               console.warn("Lỗi khi cố gắng phát nhạc lần đầu qua nút quay:", e);
               showNotification("Trình duyệt chặn tự động phát nhạc. Vui lòng nhấn nút 'Mở nhạc' ở góc dưới để bật.", 5000, 'error');
-              // Giữ nguyên trạng thái nút nếu phát không thành công
           });
       }
 
@@ -904,12 +337,12 @@
 
       if (isGuessingLetter) {
         guessInputLabel.innerText = "Nhập ký tự (1 chữ):";
-        guessInput.maxLength = "1"; // Giới hạn 1 ký tự
+        guessInput.maxLength = "1";
         guessInput.placeholder = "Nhập một chữ cái...";
         guessSubmitBtn.innerText = "ĐOÁN CHỮ";
       } else if (isGuessingFullAnswer) {
         guessInputLabel.innerText = "Nhập toàn bộ đáp án:";
-        guessInput.removeAttribute("maxlength"); // Xóa bỏ giới hạn maxlength
+        guessInput.removeAttribute("maxlength");
         guessInput.placeholder = "Nhập toàn bộ đáp án...";
         guessSubmitBtn.innerText = "ĐOÁN TOÀN BỘ";
       } else {
@@ -939,6 +372,7 @@
     }
 
     function processLetterGuess(letter) {
+      // Normalize guess and plainAnswer for comparison, handling Vietnamese diacritics
       const inputPlain = letter.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
       let matched = 0;
       
@@ -953,7 +387,7 @@
       if (matched > 0) {
         let earned = 0;
         if (currentSpinValue === "double") {
-          earned = matched * 2 * 200; // Giả sử "Nhân đôi" sẽ x2 điểm cơ bản (200)
+          earned = matched * 2 * 200;
           showNotification(`Chính xác! Bạn đoán đúng ${matched} chữ. Được x2 điểm, nhận +${earned} điểm.`, 3000, 'success');
         } else {
           earned = matched * currentSpinValue;
@@ -971,16 +405,15 @@
     }
 
     function processFullAnswerGuess(guess) {
-      // Chuyển đổi cả đoán của người dùng và đáp án đúng về dạng không dấu, không khoảng trắng để so sánh
+      // Convert both user guess and correct answer to normalized, uppercase, no-space string for comparison
       const normalizedGuess = guess.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s/g, '');
       const normalizedCorrectAnswer = plainAnswer.filter(char => char !== " ").join("");
 
       if (normalizedGuess === normalizedCorrectAnswer) {
           const hiddenLettersCount = revealedLetters.filter(l => l === null).length;
-          let earned = hiddenLettersCount * 100; // Thưởng 100 điểm cho mỗi chữ cái chưa mở
+          let earned = hiddenLettersCount * 100;
           scores[0] += earned;
           
-          // Mở tất cả các chữ cái còn lại
           for (let i = 0; i < answer.length; i++) {
               if (revealedLetters[i] === null) {
                   revealedLetters[i] = answer[i];
@@ -1009,8 +442,8 @@
       if (allLetterBoxesFilled) {
         showNotification("Tất cả các ô đã được mở! Chuyển sang câu hỏi tiếp theo.", 3000, 'info');
         setTimeout(() => {
-          initializeGame(); // Gọi lại để lấy câu hỏi mới
-        }, 10000); 
+          initializeGame();
+        }, 5000); // Thời gian chờ 5 giây trước khi chuyển câu hỏi
       }
     }
 
