@@ -89,15 +89,6 @@
       { text: "Đoán chữ", color: "#FF4500" } // Cam đỏ (OrangeRed)
     ];
 
-    let currentSegments = [...originalSegments]; // Biến này sẽ thay đổi khi các ô đặc biệt bị vô hiệu hóa
-    const specialSegmentsMap = {
-        "May mắn": { originalIndex: 10, tempValue: "100" },
-        "Nhân đôi": { originalIndex: 11, tempValue: "200" },
-        "Đoán chữ": { originalIndex: 12, tempValue: "200" }
-    };
-
-    let temporaryReplacedSegments = []; // Mảng lưu trữ các segment đã bị thay thế tạm thời
-
     const wheel = document.getElementById("wheel");
     const resultOverlay = document.getElementById("resultOverlay");
     const questionElement = document.getElementById("question");
@@ -143,11 +134,10 @@
     let askedQuestionIndices = [];
 
     let isMusicPlaying = false; 
-    let hasUserInteracted = false; // Tracks if user has interacted at all (e.e., clicked any button)
+    let hasUserInteracted = false; 
 
 
     // --- Audio Playback Functions ---
-    // This function is for small notification sounds, not for the long instruction audio
     function playNotificationSound(filename) {
         const audio = new Audio(`audio/${filename}`);
         audio.play().catch(e => {
@@ -166,31 +156,25 @@
                 playInstructionsButton.textContent = "Tắt âm thanh hướng dẫn";
             }).catch(e => {
                 console.warn("Lỗi khi phát hướng dẫn:", e);
-                // Optionally show a notification if audio fails to play
-                // This might happen if user hasn't interacted with document yet
-                // For splash screen, we just let it fail gracefully.
             });
         }
     });
 
     startGameButton.addEventListener('click', () => {
-        // Stop instruction audio if it's playing
         if (!instructionAudio.paused) {
             instructionAudio.pause();
             instructionAudio.currentTime = 0;
         }
 
-        splashScreen.classList.add('hidden'); // Hide splash screen
+        splashScreen.classList.add('hidden'); 
         
-        // Show game wrapper after transition
         splashScreen.addEventListener('transitionend', function handler() {
             splashScreen.removeEventListener('transitionend', handler);
-            gameWrapper.style.display = 'flex'; // Make game content visible
+            gameWrapper.style.display = 'flex'; 
             setTimeout(() => {
-                gameWrapper.classList.add('visible'); // Fade in game content
-            }, 50); // Small delay to ensure display:flex takes effect before transition
+                gameWrapper.classList.add('visible');
+            }, 50); 
 
-            // Start background music immediately
             backgroundMusic.volume = 0.5;
             backgroundMusic.play().then(() => {
                 isMusicPlaying = true;
@@ -199,16 +183,15 @@
                 musicToggleBtn.textContent = 'Tắt nhạc';
             }).catch(e => {
                 console.warn("Lỗi khi phát nhạc nền:", e);
-                // If music fails to play (e.g., browser auto-play policy), show a subtle notification
                 showNotification("Trình duyệt chặn tự động phát nhạc nền. Vui lòng nhấn 'Mở nhạc' để bật.", 5000, 'warning');
             });
 
-            initializeGame(); // Initialize the game after entering
+            initializeGame();
         }, { once: true });
     });
 
 
-    // --- Chức năng nhạc nền (chỉ thay đổi trạng thái sau khi vào game) ---
+    // --- Chức năng nhạc nền ---
     function toggleMusic() {
         if (isMusicPlaying) {
             backgroundMusic.pause();
@@ -240,7 +223,6 @@
         gameNotification.className = `info ${type}`;
         gameNotification.classList.add('show');
         
-        // Phát âm thanh thông báo nếu có
         if (audioFilename) {
             playNotificationSound(audioFilename);
         }
@@ -254,19 +236,16 @@
         }, duration);
     }
 
-    // Hàm hiển thị thông báo chúc mừng đặc biệt
     function showWinOverlay(message, duration = 3000, audioFilename = null) {
         winOverlay.textContent = message;
-        winOverlay.style.display = 'flex'; // Hiển thị overlay
+        winOverlay.style.display = 'flex';
         winOverlay.style.opacity = '1';
         winOverlay.style.transform = 'translate(-50%, -50%) scale(1)';
 
-        // Phát âm thanh thông báo nếu có
         if (audioFilename) {
             playNotificationSound(audioFilename);
         }
 
-        // Ẩn overlay sau một khoảng thời gian
         setTimeout(() => {
             winOverlay.style.opacity = '0';
             winOverlay.style.transform = 'translate(-50%, -50%) scale(0.8)';
@@ -297,8 +276,6 @@
     }
 
     function initializeGame() {
-      // This function now ONLY initializes the game state, no audio playing here.
-      // Audio is handled by the splash screen for music, and showNotification for specific game events.
       if (availableQuestionIndices.length === 0 && askedQuestionIndices.length === 0) {
           for (let i = 0; i < allQuestions.length; i++) {
               availableQuestionIndices.push(i);
@@ -325,9 +302,7 @@
 
       questionElement.innerHTML = `<strong>Câu hỏi (${askedQuestionIndices.length}/${allQuestions.length}):</strong> ${currentQuestion.question}`;
       renderAnswerBoxes();
-      currentSegments = [...originalSegments]; // Reset segments về trạng thái ban đầu khi bắt đầu câu hỏi mới
-      temporaryReplacedSegments = []; // Đặt lại mảng các segment bị thay thế
-      renderWheelSegments();
+      renderWheelSegments(); // Vẽ lại bánh xe, không cần reset vì nó không đổi
       updateScores();
       document.getElementById("spinButton").disabled = false;
       guessInputContainer.style.display = "none";
@@ -369,10 +344,10 @@
 
     function renderWheelSegments() {
       wheel.innerHTML = '';
-      const numSegments = currentSegments.length; // Sử dụng currentSegments
+      const numSegments = originalSegments.length;
       const anglePerSegment = 360 / numSegments;
 
-      currentSegments.forEach((seg, i) => { // Sử dụng currentSegments
+      originalSegments.forEach((seg, i) => {
         const segmentDiv = document.createElement("div");
         segmentDiv.className = "segment";
         segmentDiv.style.backgroundColor = seg.color;
@@ -389,17 +364,6 @@
       });
     }
 
-    function restoreReplacedSegments() {
-        if (temporaryReplacedSegments.length > 0) {
-            showNotification("Các ô đặc biệt đã được khôi phục lại.", 2000, 'info', 'tb6.wav');
-        }
-        temporaryReplacedSegments.forEach(originalSegment => {
-            currentSegments[originalSegment.originalIndex] = originalSegment.data;
-        });
-        temporaryReplacedSegments = [];
-        renderWheelSegments(); // Vẽ lại bánh xe sau khi khôi phục
-    }
-
     function spinWheel() {
       if (spinning) return;
       spinning = true;
@@ -411,11 +375,6 @@
       resultOverlay.style.display = "none";
       guessInputContainer.style.display = "none";
 
-      // No initial music play logic here, it's handled by splash screen's "Vào trò chơi" button
-
-      // Khôi phục các ô đã bị thay thế tạm thời nếu có (trừ khi là vừa trúng ô đặc biệt)
-      restoreReplacedSegments();
-
       const spinDegree = 3600 + Math.floor(Math.random() * 360);
       currentAngle += spinDegree;
       wheel.style.transition = "transform 5s cubic-bezier(0.33, 1, 0.68, 1)";
@@ -423,34 +382,20 @@
 
       setTimeout(() => {
         const finalAngle = currentAngle % 360;
-        let index = Math.floor((360 - (finalAngle % 360) + (360 / currentSegments.length / 2)) / (360 / currentSegments.length)) % currentSegments.length;
-        const result = currentSegments[index].text; // Lấy kết quả từ currentSegments
+        const numSegments = originalSegments.length;
+        let index = Math.floor((360 - (finalAngle % 360) + (360 / numSegments / 2)) / (360 / numSegments)) % numSegments;
+        const result = originalSegments[index].text;
 
         resultOverlay.innerText = result;
-        resultOverlay.style.background = currentSegments[index].color;
+        resultOverlay.style.background = originalSegments[index].color;
         resultOverlay.style.display = "block";
-
-        // Xử lý ô đặc biệt: tạm thời thay thế nó bằng ô điểm
-        if (specialSegmentsMap[result]) {
-            const originalSegData = originalSegments[specialSegmentsMap[result].originalIndex];
-            temporaryReplacedSegments.push({
-                originalIndex: specialSegmentsMap[result].originalIndex,
-                data: originalSegData
-            });
-            // Thay thế segment trên currentSegments
-            currentSegments[specialSegmentsMap[result].originalIndex] = {
-                text: specialSegmentsMap[result].tempValue,
-                color: originalSegData.color // Giữ màu gốc
-            };
-            renderWheelSegments(); // Vẽ lại bánh xe với segment đã thay đổi
-        }
 
         if (!isNaN(parseInt(result))) {
           currentSpinValue = parseInt(result);
           isGuessingLetter = true;
           isGuessingFullAnswer = false;
           updateGuessInputVisibility();
-          showNotification(`Kết quả: +${result}! Nhập chữ cái bạn muốn đoán.`, 3000, 'info', 'tb23.wav'); // tb23
+          showNotification(`Kết quả: +${result}! Nhập chữ cái bạn muốn đoán.`, 3000, 'info', 'tb23.wav');
         } else if (result === "Nhân đôi") {
           currentSpinValue = "double";
           isGuessingLetter = true;
@@ -562,9 +507,6 @@
             guessInputContainer.style.display = "none";
             document.getElementById("spinButton").disabled = false; 
             updateBuyLetterButtonState();
-        } else {
-            // revealRandomLetter() đã tự thông báo nếu không còn chữ để tiết lộ
-            // Không trừ điểm nếu không mua được chữ nào
         }
     }
 
@@ -678,13 +620,11 @@
       const allLetterBoxesFilled = revealedLetters.every(char => char !== null && char !== " ");
 
       if (allLetterBoxesFilled) {
-        // Thông báo chúc mừng nổi bật
-        showWinOverlay(`Chúc mừng! Bạn đã hoàn thành câu hỏi này với ${scores[0]} điểm!`, 4000, 'tb21.wav'); // Hiển thị 4 giây
+        showWinOverlay(`Chúc mừng! Bạn đã hoàn thành câu hỏi này với ${scores[0]} điểm!`, 4000, 'tb21.wav');
 
-        // Chuyển sang câu hỏi tiếp theo sau khi thông báo kết thúc
         setTimeout(() => {
           initializeGame();
-        }, 4000); // Đợi 4 giây (thời gian hiển thị thông báo) trước khi chuyển câu
+        }, 4000);
       }
     }
 
@@ -702,7 +642,6 @@
       updateBuyLetterButtonState();
     }
 
-    // No direct call to initializeGame() here anymore. It's called after the splash screen.
   </script>
 </body>
 </html>
