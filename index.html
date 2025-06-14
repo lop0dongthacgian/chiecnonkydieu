@@ -156,6 +156,10 @@
     // Hàm đọc nội dung bằng tiếng Việt
     function speakVietnamese(text) {
         if (synth && text) {
+            // Dừng bất kỳ giọng nói nào đang diễn ra để tránh chồng chéo
+            if (synth.speaking) {
+                synth.cancel();
+            }
             const utterance = new SpeechSynthesisUtterance(text);
             if (vietnameseVoice) {
                 utterance.voice = vietnameseVoice;
@@ -222,6 +226,9 @@
         gameNotification.textContent = message;
         gameNotification.className = `info ${type}`;
         gameNotification.classList.add('show');
+        
+        // Đọc nội dung thông báo
+        speakVietnamese(message);
 
         gameNotification.timeoutId = setTimeout(() => {
             gameNotification.classList.remove('show');
@@ -395,7 +402,7 @@
               musicToggleBtn.textContent = 'Tắt nhạc';
               showNotification("Nhạc đã được bật!", 2000, 'success');
           }).catch(e => {
-              console.warn("Lỗi khi cố gắng phát nhạc lần đầu qua nút quay:", e);
+              console.warn("Lỗi khi cố gắng phát nhạc lần đầu qua nút:", e);
               showNotification("Trình duyệt chặn tự động phát nhạc. Vui lòng nhấn nút 'Mở nhạc' ở góc dưới để bật.", 5000, 'error');
           });
       }
