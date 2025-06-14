@@ -126,88 +126,58 @@
     // --- Web Speech API Setup ---
     let synth = null;
     let vietnameseVoice = null;
-    let isSpeechEnabled = false; // Biến kiểm soát liệu Speech Synthesis có thể hoạt động không
 
     // Khởi tạo SpeechSynthesisUtterance và tìm giọng nói tiếng Việt
     if ('speechSynthesis' in window) {
         synth = window.speechSynthesis;
-        isSpeechEnabled = true; // Đánh dấu là trình duyệt có hỗ trợ API
 
         // Hàm để load giọng nói tiếng Việt
         function loadVoices() {
             const voices = synth.getVoices();
-            // Cố gắng tìm giọng tiếng Việt với các tên phổ biến hoặc bắt đầu bằng 'vi-'
-            // Ưu tiên giọng Google vì thường có chất lượng tốt
-            vietnameseVoice = voices.find(voice => voice.name.includes('Google Tiếng Việt') && voice.lang === 'vi-VN') ||
-                              voices.find(voice => voice.lang.startsWith('vi-')) ||
-                              voices.find(voice => voice.name.includes('Microsoft An') && voice.lang === 'vi-VN');
+            // Cố gắng tìm giọng tiếng Việt.
+            // Có thể có nhiều tên khác nhau tùy trình duyệt/HĐH.
+            // Ví dụ: 'Vietnamese', 'Google Tiếng Việt', 'Microsoft An' (Windows)
+            vietnameseVoice = voices.find(voice => voice.lang.startsWith('vi-')); 
             
+            // Nếu không tìm thấy giọng tiếng Việt, có thể dùng giọng mặc định hoặc tiếng Anh
             if (!vietnameseVoice) {
-                console.warn("Không tìm thấy giọng tiếng Việt. Sẽ sử dụng giọng mặc định hoặc giọng đầu tiên có sẵn.");
-                // Fallback nếu không có giọng tiếng Việt: thử giọng mặc định hoặc giọng đầu tiên
-                vietnameseVoice = voices.find(voice => voice.default) || voices[0];
-            }
-
-            if (!vietnameseVoice) {
-                console.error("Không tìm thấy giọng nói nào trên hệ thống.");
-                isSpeechEnabled = false; // Vô hiệu hóa Speech nếu không có giọng nào
+                console.warn("Không tìm thấy giọng tiếng Việt. Sẽ sử dụng giọng mặc định.");
+                // vietnameseVoice = voices.find(voice => voice.default) || voices[0];
             }
         }
 
         // Đợi các giọng nói được tải
         synth.onvoiceschanged = loadVoices;
-        loadVoices(); // Gọi lần đầu phòng trường hợp voices đã được tải ngay lập tức
-
-        // Thêm một event listener cho tương tác đầu tiên của người dùng
-        // để kích hoạt Web Speech API theo chính sách tự động phát
-        document.addEventListener('click', function _oneTimeUserInteract() {
-            if (isSpeechEnabled && !hasUserInteracted) {
-                // Thử phát một âm thanh nhỏ hoặc rỗng để "kích hoạt" API
-                // Một số trình duyệt có thể yêu cầu speak() được gọi từ một tương tác
-                const testUtterance = new SpeechSynthesisUtterance('');
-                synth.speak(testUtterance);
-                synth.cancel(); // Hủy ngay lập tức nếu không muốn phát âm thanh
-                hasUserInteracted = true; // Đánh dấu đã có tương tác kích hoạt
-                console.log("Web Speech API đã được kích hoạt sau tương tác người dùng.");
-            }
-            document.removeEventListener('click', _oneTimeUserInteract); // Gỡ bỏ listener sau khi kích hoạt
-        }, { once: true });
-
+        loadVoices(); // Gọi lần đầu phòng trường hợp voices đã được tải
     } else {
         console.warn("Trình duyệt không hỗ trợ Web Speech API (Speech Synthesis).");
-        isSpeechEnabled = false; // Đánh dấu là trình duyệt không hỗ trợ
     }
 
     // Hàm đọc nội dung bằng tiếng Việt
     function speakVietnamese(text) {
-        if (!isSpeechEnabled || !synth || !text) {
-            console.warn("Không thể đọc văn bản: Web Speech API không khả dụng hoặc văn bản trống.");
-            return;
-        }
-
-        // Dừng bất kỳ giọng nói nào đang diễn ra để tránh chồng chéo
-        if (synth.speaking) {
-            synth.cancel();
-        }
-        
-        const utterance = new SpeechSynthesisUtterance(text);
-        if (vietnameseVoice) {
-            utterance.voice = vietnameseVoice;
-        } else {
-            // Thử tìm lại giọng nói nếu chưa tìm thấy (có thể do load chậm)
-            loadVoices(); 
+        if (synth && text) {
+            // Dừng bất kỳ giọng nói nào đang diễn ra để tránh chồng chéo
+            if (synth.speaking) {
+                synth.cancel();
+            }
+            const utterance = new SpeechSynthesisUtterance(text);
             if (vietnameseVoice) {
                 utterance.voice = vietnameseVoice;
             } else {
-                console.warn("Không có giọng nói tiếng Việt hoặc mặc định nào được tìm thấy để đọc.");
-                return; // Không thể đọc nếu không có giọng nào
+                // Thử tìm lại giọng nói nếu chưa tìm thấy (có thể do load chậm)
+                loadVoices();
+                if (vietnameseVoice) {
+                    utterance.voice = vietnameseVoice;
+                }
             }
-        }
-        utterance.lang = 'vi-VN'; // Đảm bảo ngôn ngữ là tiếng Việt
-        utterance.rate = 1; // Tốc độ đọc (1 là bình thường)
-        utterance.pitch = 1; // Độ cao giọng (1 là bình thường)
+            utterance.lang = 'vi-VN'; // Đảm bảo ngôn ngữ là tiếng Việt
+            utterance.rate = 1; // Tốc độ đọc (1 là bình thường)
+            utterance.pitch = 1; // Độ cao giọng (1 là bình thường)
 
-        synth.speak(utterance);
+            synth.speak(utterance);
+        } else {
+            console.warn("Không thể đọc văn bản: SpeechSynthesis không khả dụng hoặc văn bản trống.");
+        }
     }
 
 
