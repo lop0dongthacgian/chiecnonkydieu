@@ -65,6 +65,9 @@ body {
     align-items: center;
     z-index: 1001; /* Above everything else */
     transition: opacity 1s ease-out, visibility 1s ease-out;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto; /* Allow scrolling on small screens */
 }
 
 #splashScreen.hidden {
@@ -73,26 +76,93 @@ body {
     pointer-events: none; /* Disable interaction when hidden */
 }
 
-#splashScreen h1 {
-    font-size: 4em;
+.splash-content {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 25px 35px;
+    border-radius: 20px;
+    max-width: 760px; /* Thu gọn chiều rộng */
+    width: 95%; /* Để không tràn viền */
     color: white;
-    text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
-    margin-bottom: 40px;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     animation: fadeInDown 1s ease-out;
+    text-align: center; /* Căn giữa toàn bộ nội dung trong box */
+}
+
+
+#splashScreen h1 {
+    font-size: 3.2em; /* Tăng cỡ chữ */
+    color: #fff;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.splash-content p, .splash-content li {
+    font-size: 1.2em; /* Tăng cỡ chữ */
+    line-height: 1.6;
+    color: white; /* Đổi màu chữ thành trắng */
+    text-align: left; /* Căn trái lại nội dung cho dễ đọc */
+}
+
+.splash-content .details h2 {
+    font-size: 1.5em; /* Tăng cỡ chữ */
+    margin-top: 15px;
+    margin-bottom: 10px;
+    color: var(--color-yellow);
+    text-align: left; /* Căn trái lại nội dung cho dễ đọc */
+}
+
+.splash-content ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.splash-content ul li {
+    margin-bottom: 10px;
+}
+
+/* Giữ lại màu nổi bật nhưng cho hài hòa hơn */
+.splash-content .highlight-creator {
+    color: #00FFFF; /* Accent Color */
+    font-weight: bold;
+}
+.splash-content .highlight-program {
+    color: #ADFF2F; /* GreenYellow */
+    font-weight: bold;
+}
+.splash-content .highlight-update {
+    color: #FFD700; /* Gold */
+    font-weight: bold;
+}
+.splash-content .highlight-benefit {
+    color: #FFA500; /* Orange */
+    font-weight: bold;
+}
+
+
+#splashScreen .splash-buttons {
+    margin-top: 25px;
+    animation: fadeInUp 1s ease-out;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
 }
 
 #splashScreen .splash-buttons button {
     background-color: var(--color-lime-green); /* Green */
     color: white;
-    padding: 15px 30px;
-    margin: 15px;
+    padding: 15px 30px; /* Tăng kích thước nút */
     border: none;
     border-radius: 8px;
-    font-size: 1.8em;
+    font-size: 1.6em; /* Tăng cỡ chữ */
     cursor: pointer;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     transition: background-color 0.3s ease, transform 0.2s ease;
-    animation: fadeInUp 1s ease-out;
+    font-family: var(--font-family);
+    font-weight: bold;
 }
 
 #splashScreen .splash-buttons button:hover {
@@ -613,11 +683,15 @@ footer {
     }
 
     #splashScreen h1 {
-        font-size: 3em;
+        font-size: 2.8em;
+    }
+    
+    .splash-content p, .splash-content li {
+        font-size: 1.1em;
     }
 
     #splashScreen .splash-buttons button {
-        font-size: 1.5em;
+        font-size: 1.4em;
         padding: 12px 25px;
     }
 
@@ -647,6 +721,41 @@ footer {
     footer {
         border-radius: 0;
         padding: 12px 10px;
+    }
+
+    #splashScreen {
+        justify-content: flex-start;
+        padding: 15px;
+    }
+
+    .splash-content {
+        padding: 20px;
+        margin-top: 5vh; /* Thêm khoảng trống ở trên */
+    }
+
+    #splashScreen h1 {
+        font-size: 2.2em;
+    }
+
+    .splash-content p, .splash-content li {
+        font-size: 1em;
+        line-height: 1.5;
+    }
+    
+    .splash-content .details h2 {
+        font-size: 1.3em;
+    }
+
+    #splashScreen .splash-buttons {
+        margin-top: 20px;
+        gap: 15px;
+    }
+
+    #splashScreen .splash-buttons button {
+        font-size: 1.1em;
+        padding: 10px 20px;
+        width: 100%;
+        max-width: 300px;
     }
 
     .main-content {
@@ -749,15 +858,6 @@ footer {
         margin: 5px;
     }
 
-    #splashScreen h1 {
-        font-size: 2em;
-    }
-    #splashScreen .splash-buttons button {
-        font-size: 1em;
-        padding: 8px 15px;
-        margin: 10px;
-    }
-
     #musicToggle {
         padding: 6px 10px;
         font-size: 0.8em;
@@ -819,13 +919,12 @@ footer {
         padding: 5px 8px;
         margin: 4px;
     }
+
     #splashScreen h1 {
-        font-size: 1.6em;
-        margin-bottom: 20px;
+        font-size: 1.8em;
     }
+    
     #splashScreen .splash-buttons button {
-        font-size: 0.8em;
-        padding: 5px 10px;
-        margin: 8px;
+        font-size: 1em;
     }
 }
