@@ -123,6 +123,60 @@
     let isMusicPlaying = false; 
     let hasUserInteracted = false;
 
+    // --- Web Speech API Setup ---
+    let synth = null;
+    let vietnameseVoice = null;
+
+    // Khởi tạo SpeechSynthesisUtterance và tìm giọng nói tiếng Việt
+    if ('speechSynthesis' in window) {
+        synth = window.speechSynthesis;
+
+        // Hàm để load giọng nói tiếng Việt
+        function loadVoices() {
+            const voices = synth.getVoices();
+            // Cố gắng tìm giọng tiếng Việt.
+            // Có thể có nhiều tên khác nhau tùy trình duyệt/HĐH.
+            // Ví dụ: 'Vietnamese', 'Google Tiếng Việt', 'Microsoft An' (Windows)
+            vietnameseVoice = voices.find(voice => voice.lang.startsWith('vi-')); 
+            
+            // Nếu không tìm thấy giọng tiếng Việt, có thể dùng giọng mặc định hoặc tiếng Anh
+            if (!vietnameseVoice) {
+                console.warn("Không tìm thấy giọng tiếng Việt. Sẽ sử dụng giọng mặc định.");
+                // vietnameseVoice = voices.find(voice => voice.default) || voices[0];
+            }
+        }
+
+        // Đợi các giọng nói được tải
+        synth.onvoiceschanged = loadVoices;
+        loadVoices(); // Gọi lần đầu phòng trường hợp voices đã được tải
+    } else {
+        console.warn("Trình duyệt không hỗ trợ Web Speech API (Speech Synthesis).");
+    }
+
+    // Hàm đọc nội dung bằng tiếng Việt
+    function speakVietnamese(text) {
+        if (synth && text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            if (vietnameseVoice) {
+                utterance.voice = vietnameseVoice;
+            } else {
+                // Thử tìm lại giọng nói nếu chưa tìm thấy (có thể do load chậm)
+                loadVoices();
+                if (vietnameseVoice) {
+                    utterance.voice = vietnameseVoice;
+                }
+            }
+            utterance.lang = 'vi-VN'; // Đảm bảo ngôn ngữ là tiếng Việt
+            utterance.rate = 1; // Tốc độ đọc (1 là bình thường)
+            utterance.pitch = 1; // Độ cao giọng (1 là bình thường)
+
+            synth.speak(utterance);
+        } else {
+            console.warn("Không thể đọc văn bản: SpeechSynthesis không khả dụng hoặc văn bản trống.");
+        }
+    }
+
+
     // --- Chức năng nhạc nền ---
     function toggleMusic() {
         if (!hasUserInteracted && !isMusicPlaying) {
@@ -184,6 +238,9 @@
         winOverlay.style.display = 'flex'; // Hiển thị overlay
         winOverlay.style.opacity = '1';
         winOverlay.style.transform = 'translate(-50%, -50%) scale(1)';
+
+        // Đọc nội dung thông báo
+        speakVietnamese(message);
 
         // Ẩn overlay sau một khoảng thời gian
         setTimeout(() => {
@@ -486,7 +543,7 @@
         const letterRevealed = revealRandomLetter();
 
         if (letterRevealed) {
-            scores[0] -= COST_OF_LETTER; // Cho phép điểm âm
+            scores[0] -= COST_OF_LETTER; 
             updateScores();
             showNotification(`Bạn đã mua một chữ với giá -${COST_OF_LETTER} điểm!`, 3000, 'success');
             guessInputContainer.style.display = "none";
@@ -557,7 +614,7 @@
         }
         scores[0] += earned;
       } else {
-        scores[0] -= 300; // Cho phép điểm âm
+        scores[0] -= 300; 
         showNotification(`Sai rồi! Bạn đoán chữ '${letter}' không có hoặc đã mở. Bị trừ 300 điểm.`, 3000, 'error');
       }
       updateScores();
@@ -590,7 +647,7 @@
           updateScores();
           checkGameCompletion();
       } else {
-          scores[0] -= 300; // Cho phép điểm âm
+          scores[0] -= 300; 
           showNotification(`Sai rồi! Bạn đoán sai toàn bộ đáp án. Bị trừ 300 điểm.`, 3000, 'error');
       }
       updateScores();
@@ -609,7 +666,7 @@
 
       if (allLetterBoxesFilled) {
         // Thông báo chúc mừng nổi bật
-        showWinOverlay(`Chúc mừng! Bạn đã hoàn thành câu hỏi này với ${scores[0]} điểm!`, 4000); // 4 giây
+        showWinOverlay(`Chúc mừng! Bạn đã hoàn thành câu hỏi này với ${scores[0]} điểm!`, 4000); // Hiển thị 4 giây
 
         // Chuyển sang câu hỏi tiếp theo sau khi thông báo kết thúc
         setTimeout(() => {
