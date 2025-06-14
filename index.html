@@ -95,6 +95,10 @@
     const buyLetterButton = document.getElementById("buyLetterButton");
 
     const gameNotification = document.getElementById("gameNotification");
+    // Thêm một element cho thông báo chúc mừng riêng
+    const winOverlay = document.createElement('div');
+    winOverlay.id = 'winOverlay';
+    document.body.appendChild(winOverlay);
 
     const backgroundMusic = document.getElementById("backgroundMusic");
     const musicToggleBtn = document.getElementById("musicToggle");
@@ -174,6 +178,25 @@
         }, duration);
     }
 
+    // Hàm hiển thị thông báo chiến thắng đặc biệt
+    function showWinOverlay(message, duration = 3000) {
+        winOverlay.textContent = message;
+        winOverlay.style.display = 'flex'; // Hiển thị overlay
+        winOverlay.style.opacity = '1';
+        winOverlay.style.transform = 'translate(-50%, -50%) scale(1)';
+
+        // Ẩn overlay sau một khoảng thời gian
+        setTimeout(() => {
+            winOverlay.style.opacity = '0';
+            winOverlay.style.transform = 'translate(-50%, -50%) scale(0.8)';
+            winOverlay.addEventListener('transitionend', function handler() {
+                winOverlay.style.display = 'none';
+                winOverlay.removeEventListener('transitionend', handler);
+            }, { once: true });
+        }, duration);
+    }
+
+
     function getRandomQuestionIndex() {
         if (availableQuestionIndices.length === 0) {
             if (allQuestions.length > 0) {
@@ -228,7 +251,7 @@
       resultOverlay.style.display = "none";
 
       document.getElementById("player1").classList.add("active");
-      showNotification(`Bắt đầu câu hỏi mới! Mời bạn quay nón.`, 3000, 'info');
+      showNotification(`Bắt đầu câu hỏi mới! Đến lượt bạn quay nón.`, 3000, 'info');
       updateBuyLetterButtonState();
     }
 
@@ -463,7 +486,7 @@
         const letterRevealed = revealRandomLetter();
 
         if (letterRevealed) {
-            scores[0] -= COST_OF_LETTER;
+            scores[0] -= COST_OF_LETTER; // Cho phép điểm âm
             updateScores();
             showNotification(`Bạn đã mua một chữ với giá -${COST_OF_LETTER} điểm!`, 3000, 'success');
             guessInputContainer.style.display = "none";
@@ -471,6 +494,7 @@
             updateBuyLetterButtonState();
         } else {
             // revealRandomLetter() đã tự thông báo nếu không còn chữ để tiết lộ
+            // Không trừ điểm nếu không mua được chữ nào
         }
     }
 
@@ -533,8 +557,7 @@
         }
         scores[0] += earned;
       } else {
-        scores[0] -= 300;
-        if (scores[0] < 0) scores[0] = 0;
+        scores[0] -= 300; // Cho phép điểm âm
         showNotification(`Sai rồi! Bạn đoán chữ '${letter}' không có hoặc đã mở. Bị trừ 300 điểm.`, 3000, 'error');
       }
       updateScores();
@@ -567,8 +590,7 @@
           updateScores();
           checkGameCompletion();
       } else {
-          scores[0] -= 300;
-          if (scores[0] < 0) scores[0] = 0;
+          scores[0] -= 300; // Cho phép điểm âm
           showNotification(`Sai rồi! Bạn đoán sai toàn bộ đáp án. Bị trừ 300 điểm.`, 3000, 'error');
       }
       updateScores();
@@ -586,10 +608,13 @@
       const allLetterBoxesFilled = revealedLetters.every(char => char !== null && char !== " ");
 
       if (allLetterBoxesFilled) {
-        showNotification("Tất cả các ô đã được mở! Chuyển sang câu hỏi tiếp theo.", 3000, 'info');
+        // Thông báo chúc mừng nổi bật
+        showWinOverlay(`Chúc mừng! Bạn đã hoàn thành câu hỏi này với ${scores[0]} điểm!`, 4000); // 4 giây
+
+        // Chuyển sang câu hỏi tiếp theo sau khi thông báo kết thúc
         setTimeout(() => {
           initializeGame();
-        }, 3000);
+        }, 4000); // Đợi 4 giây (thời gian hiển thị thông báo) trước khi chuyển câu
       }
     }
 
