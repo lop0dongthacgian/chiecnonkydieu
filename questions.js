@@ -25,7 +25,7 @@ const allQuestions = [
         plainAnswer: ['P', 'E', 'N', 'C', 'I', 'L'] // PENCIL
     },
     {
-        question: "What do you carry your books in? (Bạn mang sách trong cái gì?)",
+        question: "What do you carry your books in? (Bạn đựng sách trong vật gì?)",
         answer: ['S', 'C', 'H', 'O', 'O', 'L', 'B', 'A', 'G'],
         plainAnswer: ['S', 'C', 'H', 'O', 'O', 'L', 'B', 'A', 'G'] // SCHOOLBAG
     },
@@ -76,29 +76,29 @@ const allQuestions = [
         plainAnswer: ['T', 'W', 'O'] // TWO
     },
     {
-        question: "You use this to hear. (Bạn dùng cái này để nghe.)",
+        question: "You use this to hear. (Bạn sử dụng bộ phận nào để nghe?)",
         answer: ['E', 'A', 'R'],
         plainAnswer: ['E', 'A', 'R'] // EAR
     },
     {
-        question: "You use these to walk. (Bạn dùng những thứ này để đi bộ.)",
+        question: "You use these to walk. (Bạn dùng bộ phận nào để đi lại?)",
         answer: ['L', 'E', 'G', 'S'],
         plainAnswer: ['L', 'E', 'G', 'S'] // LEGS
     },
 
     // Unit 6: Clothes (Quần áo)
     {
-        question: "What do you wear on your feet? (Bạn đi gì vào chân?)",
+        question: "What do you wear on your feet? (Bạn mang gì vào chân?)",
         answer: ['S', 'H', 'O', 'E', 'S'],
         plainAnswer: ['S', 'H', 'O', 'E', 'S'] // SHOES
     },
     {
-        question: "You wear this on your head. (Bạn đội cái này trên đầu.)",
+        question: "You wear this on your head. (Bạn đội gì trên đầu?)",
         answer: ['H', 'A', 'T'],
         plainAnswer: ['H', 'A', 'T'] // HAT
     },
     {
-        question: "You wear this on your body. (Bạn mặc cái này trên cơ thể.)",
+        question: "You wear this on your body. (Bạn mặc gì trên người?)",
         answer: ['S', 'H', 'I', 'R', 'T'],
         plainAnswer: ['S', 'H', 'I', 'R', 'T'] // SHIRT
     },
@@ -121,29 +121,29 @@ const allQuestions = [
         plainAnswer: ['B', 'E', 'D'] // BED
     },
     {
-        question: "You sit on it. (Bạn ngồi trên gì?)",
+        question: "You sit on it. (Bạn ngồi vào vật gì?)",
         answer: ['C', 'H', 'A', 'I', 'R'],
         plainAnswer: ['C', 'H', 'A', 'I', 'R'] // CHAIR
     },
     {
-        question: "You watch this for fun. (Bạn xem cái này để giải trí.)",
+        question: "You watch this for fun. (Bạn xem gì để giải trí?)",
         answer: ['T', 'V'],
         plainAnswer: ['T', 'V'] // TV
     },
 
     // Unit 9: In the City (Trong thành phố)
     {
-        question: "You read books here. (Bạn đọc sách ở đâu?)",
+        question: "You read books here. (Bạn thường đọc sách ở đâu?)",
         answer: ['L', 'I', 'B', 'R', 'A', 'R', 'Y'],
         plainAnswer: ['L', 'I', 'B', 'R', 'A', 'R', 'Y'] // LIBRARY
     },
     {
-        question: "You see animals here. (Bạn nhìn thấy động vật ở đâu?)",
+        question: "You see animals here. (Bạn có thể nhìn thấy động vật ở đâu?)",
         answer: ['Z', 'O', 'O'],
         plainAnswer: ['Z', 'O', 'O'] // ZOO
     },
     {
-        question: "You buy things here. (Bạn mua đồ ở đâu?)",
+        question: "You buy things here. (Bạn mua sắm ở đâu?)",
         answer: ['S', 'H', 'O', 'P'],
         plainAnswer: ['S', 'H', 'O', 'P'] // SHOP
     },
@@ -155,7 +155,7 @@ const allQuestions = [
         plainAnswer: ['S', 'U', 'N'] // SUN
     },
     {
-        question: "It falls from the sky when it rains. (Nó rơi từ trời khi trời mưa.)",
+        question: "It falls from the sky when it rains. (Thứ gì rơi xuống khi trời mưa?)",
         answer: ['R', 'A', 'I', 'N'],
         plainAnswer: ['R', 'A', 'I', 'N'] // RAIN
     },
@@ -172,12 +172,12 @@ const allQuestions = [
         plainAnswer: ['S', 'L', 'E', 'E', 'P'] // SLEEP
     },
     {
-        question: "You do this with your mouth when you're happy. (Bạn làm điều này với miệng khi vui.)",
+        question: "You do this with your mouth when you're happy. (Bạn thường làm gì với miệng khi bạn vui?)",
         answer: ['S', 'M', 'I', 'L', 'E'],
         plainAnswer: ['S', 'M', 'I', 'L', 'E'] // SMILE
     },
     {
-        question: "You do this to move your body fast. (Bạn làm điều này để di chuyển nhanh.)",
+        question: "You do this to move your body fast. (Bạn làm gì để di chuyển nhanh?)",
         answer: ['R', 'U', 'N'],
         plainAnswer: ['R', 'U', 'N'] // RUN
     },
@@ -218,17 +218,17 @@ const allQuestions = [
 
     // Unit 14: Feelings (Cảm xúc)
     {
-        question: "You feel this when you get a gift. (Bạn cảm thấy gì khi nhận quà?)",
+        question: "You feel this when you get a gift. (Bạn thường cảm thấy thế nào khi nhận được quà?)",
         answer: ['H', 'A', 'P', 'P', 'Y'],
         plainAnswer: ['H', 'A', 'P', 'P', 'Y'] // HAPPY
     },
     {
-        question: "You feel this when you lose something. (Bạn cảm thấy gì khi mất đồ?)",
+        question: "You feel this when you lose something. (Bạn thấy thế nào khi làm mất đồ?)",
         answer: ['S', 'A', 'D'],
         plainAnswer: ['S', 'A', 'D'] // SAD
     },
     {
-        question: "You feel this before a test. (Bạn cảm thấy gì trước bài kiểm tra?)",
+        question: "You feel this before a test. (Trước bài kiểm tra, bạn thường cảm thấy như thế nào?)",
         answer: ['N', 'E', 'R', 'V', 'O', 'U', 'S'],
         plainAnswer: ['N', 'E', 'R', 'V', 'O', 'U', 'S'] // NERVOUS
     },
@@ -327,7 +327,7 @@ const allQuestions = [
         plainAnswer: ["F", "I", "S", "H"]
     },
     {
-        question: "You use this to see. (Bạn dùng cái này để nhìn.)",
+        question: "You use this to see. (Bạn sử dụng gì để nhìn thấy?)",
         answer: ["E", "Y", "E", "S"],
         plainAnswer: ["E", "Y", "E", "S"]
     },
@@ -362,7 +362,7 @@ const allQuestions = [
         plainAnswer: ["C", "L", "O", "S", "E", "T"]
     },
     {
-        question: "You open this to enter a room. (Bạn mở cái này để vào phòng.)",
+        question: "You open this to enter a room. (Bạn mở gì để bước vào phòng?)",
         answer: ["D", "O", "O", "R"],
         plainAnswer: ["D", "O", "O", "R"]
     },
