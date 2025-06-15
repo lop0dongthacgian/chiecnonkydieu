@@ -1,357 +1,431 @@
-/* General Body Styles */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    background: linear-gradient(135deg, #74ebd5 0%, #9face6 100%);
-    color: #333;
-    overflow: hidden;
-    position: relative;
+:root {
+    /* Màu sắc đa dạng, tươi sáng và rực rỡ, hấp dẫn thiếu nhi */
+    --primary-color: #FF69B4; /* Hồng kẹo - sôi động */
+    --secondary-color: #8A2BE2; /* Xanh tím than - huyền bí */
+    --accent-color: #00FFFF; /* Xanh ngọc bích - tươi mát */
+    --background-color: #E0FFFF; /* Xanh da trời nhạt - nền nhẹ nhàng */
+    --card-bg-color: #FFFFFF; /* Nền thẻ trắng */
+    --border-color: #FFD700; /* Vàng kim - nổi bật */
+    --text-color: #333333;
+    --dark-text-color: #555555;
+    --font-family: 'Comic Sans MS', 'Arial', sans-serif; /* Đã khôi phục font */
+
+    /* Màu sắc bổ sung cho bánh xe và các yếu tố khác */
+    --color-orange-red: #FF4500;
+    --color-lime-green: #32CD32;
+    --color-deep-sky-blue: #00BFFF;
+    --color-purple: #800080;
+    --color-gold: #FFD700;
+    --color-pink: #FFC0CB;
+    --color-light-green: #90EE90;
+    --color-light-blue: #ADD8E6;
+    --color-yellow: #FFFF00;
+    --color-magenta: #FF00FF;
+    --color-cyan: #00FFFF;
+    --color-violet: #EE82EE;
+    --color-coral: #FF7F50;
+    --color-turquoise: #40E0D0;
+
+    /* Colors for notifications (có độ trong suốt) */
+    --info-bg-color: rgba(33, 150, 243, 0.85); /* Blue */
+    --info-text-color: white;
+    --success-bg-color: rgba(76, 175, 80, 0.85); /* Green */
+    --success-text-color: white;
+    --error-bg-color: rgba(244, 67, 54, 0.85); /* Red */
+    --error-text-color: white;
+    --warning-bg-color: rgba(255, 193, 7, 0.85); /* Yellow */
+    --warning-text-color: #333333; /* Darker text for warning */
 }
 
-/* Splash Screen */
+/* Base Styles */
+body {
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    justify-content: center; /* Center game-wrapper vertically */
+    align-items: center; /* Center game-wrapper horizontally */
+    overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+/* Splash Screen styles */
 #splashScreen {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.95);
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); /* Gradient màu chính */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    text-align: center;
-    z-index: 1000;
-    transition: opacity 1s ease-out;
+    z-index: 1001; /* Above everything else */
+    transition: opacity 1s ease-out, visibility 1s ease-out;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto; /* Allow scrolling on small screens */
 }
 
 #splashScreen.hidden {
     opacity: 0;
-    pointer-events: none; /* Disable interactions after fade out */
+    visibility: hidden;
+    pointer-events: none; /* Disable interaction when hidden */
 }
 
 .splash-content {
-    background-color: #ffffff;
-    padding: 40px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-    max-width: 800px;
-    margin: 20px;
-    transform: scale(1);
-    transition: transform 0.5s ease-out;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 25px 35px;
+    border-radius: 20px;
+    max-width: 760px; /* Thu gọn chiều rộng */
+    width: 95%; /* Để không tràn viền */
+    color: white;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    animation: fadeInDown 1s ease-out;
+    text-align: center; /* Căn giữa toàn bộ nội dung trong box */
 }
 
-#splashScreen.hidden .splash-content {
-    transform: scale(0.9);
-}
 
-.splash-content h1 {
-    color: #4CAF50;
-    font-size: 3em;
+#splashScreen h1 {
+    font-size: 3.2em; /* Tăng cỡ chữ */
+    color: #fff;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
     margin-bottom: 20px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    text-align: center;
 }
 
-.splash-content .intro {
-    font-size: 1.2em;
+.splash-content p, .splash-content li {
+    font-size: 1.2em; /* Tăng cỡ chữ */
     line-height: 1.6;
-    margin-bottom: 30px;
-    color: #555;
-}
-
-.highlight-creator {
-    font-weight: bold;
-    color: #007bff;
-}
-
-.highlight-program {
-    font-weight: bold;
-    color: #dc3545;
-}
-
-.highlight-update {
-    font-weight: bold;
-    color: #ffc107;
-}
-
-.highlight-benefit {
-    font-weight: bold;
-    color: #28a745;
+    color: white; /* Đổi màu chữ thành trắng */
+    text-align: left; /* Căn trái lại nội dung cho dễ đọc */
 }
 
 .splash-content .details h2 {
-    color: #007bff;
-    margin-bottom: 15px;
-    font-size: 1.8em;
+    font-size: 1.5em; /* Tăng cỡ chữ */
+    margin-top: 15px;
+    margin-bottom: 10px;
+    color: var(--color-yellow);
+    text-align: left; /* Căn trái lại nội dung cho dễ đọc */
 }
 
-.splash-content .details ul {
+.splash-content ul {
     list-style: none;
-    padding: 0;
-    margin-bottom: 30px;
+    padding-left: 0;
 }
 
-.splash-content .details ul li {
-    padding: 8px 0;
-    font-size: 1.1em;
-    color: #666;
+.splash-content ul li {
+    margin-bottom: 10px;
 }
 
-.splash-content .details ul li::before {
-    content: "✓ ";
-    color: #28a745;
+/* Giữ lại màu nổi bật nhưng cho hài hòa hơn */
+.splash-content .highlight-creator {
+    color: #00FFFF; /* Accent Color */
     font-weight: bold;
-    margin-right: 8px;
+}
+.splash-content .highlight-program {
+    color: #ADFF2F; /* GreenYellow */
+    font-weight: bold;
+}
+.splash-content .highlight-update {
+    color: #FFD700; /* Gold */
+    font-weight: bold;
+}
+.splash-content .highlight-benefit {
+    color: #FFA500; /* Orange */
+    font-weight: bold;
 }
 
-.splash-content .outro {
-    font-style: italic;
-    color: #777;
-    font-size: 1.1em;
-}
 
-.splash-buttons {
-    margin-top: 30px;
+#splashScreen .splash-buttons {
+    margin-top: 25px;
+    animation: fadeInUp 1s ease-out;
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 20px;
 }
 
-.splash-buttons button {
-    padding: 15px 30px;
-    font-size: 1.2em;
-    font-weight: bold;
+#splashScreen .splash-buttons button {
+    background-color: var(--color-lime-green); /* Green */
+    color: white;
+    padding: 15px 30px; /* Tăng kích thước nút */
     border: none;
     border-radius: 8px;
+    font-size: 1.6em; /* Tăng cỡ chữ */
     cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: var(--font-family);
+    font-weight: bold;
 }
 
-#playInstructionsButton {
-    background-color: #6c757d;
-    color: white;
+#splashScreen .splash-buttons button:hover {
+    background-color: #27c240;
+    transform: translateY(-3px);
 }
 
-#playInstructionsButton:hover {
-    background-color: #5a6268;
-    transform: translateY(-2px);
+#splashScreen .splash-buttons button:nth-child(2) { /* "Vào trò chơi" button */
+    background-color: var(--color-deep-sky-blue); /* Blue */
 }
 
-#startGameButton {
-    background-color: #28a745;
-    color: white;
+#splashScreen .splash-buttons button:nth-child(2):hover {
+    background-color: #007bff;
 }
 
-#startGameButton:hover {
-    background-color: #218838;
-    transform: translateY(-2px);
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-50px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* Game Wrapper */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(50px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Game Wrapper - Ensure it's hidden initially until splash screen disappears */
 .game-wrapper {
-    display: none; /* Hidden by default */
-    opacity: 0; /* For fade-in effect */
-    transition: opacity 1s ease-in;
+    display: flex;
     flex-direction: column;
-    width: 90%;
+    width: 100%;
     max-width: 1200px;
-    background-color: #ffffff;
+    background-color: var(--card-bg-color);
     border-radius: 15px;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-    padding: 20px;
-    box-sizing: border-box;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    display: none; 
+    opacity: 0;
+    transition: opacity 1s ease-in;
+    min-height: 95vh;
 }
 
 .game-wrapper.visible {
     opacity: 1;
 }
 
-header {
-    text-align: center;
-    padding: 15px 0;
-    margin-bottom: 20px;
-    border-bottom: 2px solid #eee;
-}
-
-header h1 {
-    color: #4CAF50;
-    font-size: 2.8em;
-    margin: 0;
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
-}
-
 .main-content {
     display: flex;
     flex-wrap: wrap;
-    gap: 30px;
-    justify-content: center;
+    gap: 15px;
+    padding: 20px;
+    flex: 1;
 }
 
 .left-panel, .right-panel {
-    background-color: #f9f9f9;
-    border-radius: 10px;
+    flex: 1;
+    min-width: 350px;
+    background-color: #f0f8ff; /* Light azure - màu nền panel mới */
     padding: 20px;
+    border-radius: 10px;
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
 }
 
 .left-panel {
-    flex: 2;
-    min-width: 400px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 20px;
+    justify-content: space-between;
 }
 
-.right-panel {
-    flex: 1;
-    min-width: 280px;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-}
-
-/* Question and Answer */
-#question {
-    font-size: 1.4em;
-    font-weight: bold;
-    margin-bottom: 20px;
+/* Header */
+header {
+    background: linear-gradient(90deg, var(--primary-color), var(--color-orange-red)); /* Gradient cho header */
+    color: white;
+    padding: 20px 0;
     text-align: center;
-    color: #007bff;
-    background-color: #eaf6ff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 123, 255, 0.1);
-    width: 100%;
-    box-sizing: border-box;
+    font-size: 1.8em;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Đảm bảo header chiếm hết chiều rộng */
+    box-sizing: border-box; /* Tính cả padding vào width */
 }
 
+header h1 {
+    margin: 0;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Question Section */
+#question {
+    font-size: 1.6em;
+    font-weight: bold;
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    border: 2px solid var(--accent-color);
+}
+
+/* Answer Boxes */
 .answer-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
-    margin-bottom: 30px;
-    min-height: 80px; /* Ensure space even if no boxes */
+    gap: 6px;
+    margin-bottom: 25px;
 }
 
 .answer-group {
     display: flex;
-    gap: 5px;
-    margin: 0 5px; /* Add some margin between word groups */
+    gap: 2px;
+    margin: 0 3px;
 }
 
 .letter-box {
-    width: 40px;
-    height: 50px;
-    background-color: #e0e0e0;
-    border: 2px solid #bbb;
-    border-radius: 5px;
+    width: 45px;
+    height: 60px;
+    border: 3px solid var(--border-color);
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.8em;
+    font-size: 2em;
     font-weight: bold;
-    color: #333;
+    background-color: #FFFACD; /* Màu lemon chiffon - tươi sáng */
+    color: var(--text-color);
+    border-radius: 8px;
     text-transform: uppercase;
-    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .letter-box.revealed {
-    background-color: #c8e6c9;
-    border-color: #4CAF50;
-    color: #1a5e1d;
-    transform: scale(1.05);
+    background-color: #98FB98; /* Màu pale green - tươi mới */
+    color: #006400; /* Dark green */
+    border-color: #006400;
 }
 
 .word-space {
-    width: 25px; /* Represents a space between words */
-    height: 50px;
+    width: 30px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
 
 /* Wheel Container */
 #wheel-container {
     position: relative;
-    width: 300px;
-    height: 300px;
-    margin: 20px auto;
+    width: 450px;
+    height: 450px;
+    margin: 25px auto;
     border-radius: 50%;
-    border: 10px solid #ddd;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    border: 15px solid var(--border-color); /* Viền vàng */
+    overflow: hidden;
+    background-color: #fdfdfd;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f0f0f0;
-    overflow: hidden; /* Hide parts of segments outside the circle */
 }
 
 #wheel {
-    position: absolute;
     width: 100%;
     height: 100%;
-    border-radius: 50%;
+    position: relative;
     transition: transform 5s cubic-bezier(0.33, 1, 0.68, 1);
 }
 
+/* Updated segment colors for a vibrant look */
+.segment:nth-child(1) { background-color: var(--color-pink); }
+.segment:nth-child(2) { background-color: var(--color-light-green); }
+.segment:nth-child(3) { background-color: var(--color-light-blue); }
+.segment:nth-child(4) { background-color: var(--color-yellow); }
+.segment:nth-child(5) { background-color: var(--color-magenta); }
+.segment:nth-child(6) { background-color: var(--color-cyan); }
+.segment:nth-child(7) { background-color: var(--color-violet); }
+.segment:nth-child(8) { background-color: var(--color-coral); }
+.segment:nth-child(9) { background-color: var(--color-turquoise); }
+.segment:nth-child(10) { background-color: var(--primary-color); }
+.segment:nth-child(11) { background-color: var(--secondary-color); }
+.segment:nth-child(12) { background-color: var(--accent-color); }
+
+
 .segment {
     position: absolute;
-    top: 0;
-    right: 0;
     width: 50%;
     height: 50%;
-    transform-origin: 0% 100%; /* Rotate around the center bottom-left of the segment square */
-    overflow: hidden; /* Ensure text stays within the segment's visible part */
+    top: 0;
+    left: 25%;
+    transform-origin: 50% 100%;
+    overflow: hidden;
+    clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
-    font-weight: bold;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-    border: 1px solid rgba(255,255,255,0.2); /* Small border for separation */
-    box-sizing: border-box;
+    text-align: center;
+    /* Add a subtle shadow for depth */
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.5); /* Light border between segments */
 }
 
 .segment span {
     position: absolute;
-    font-size: 1.2em; /* Adjust font size for segment text */
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(calc(var(--angle) / 2)); /* Counter-rotate text */
+    color: var(--text-color); /* Use general text color for contrast */
+    font-weight: bold;
+    font-size: 1.3em;
     white-space: nowrap;
-    /* This positioning and transformation is complex for a perfect radial layout.
-       For a simple wedge, positioning within the skewed div works.
-       You might need to adjust `left`, `top` for perfect alignment. */
-    transform-origin: 50% 50%; /* Center of the span itself */
-    left: 50%; /* Approximate center */
-    top: 50%; /* Approximate center */
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5); /* Shadow for text readability */
+    z-index: 1; /* Ensure text is above segment */
+}
+
+/* Indicator (pointer) for the wheel */
+#wheel-indicator {
+    position: absolute;
+    top: -20px; /* Position above the wheel */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-bottom: 30px solid var(--primary-color); /* Màu mũi tên */
+    z-index: 12; /* Above wheel and result overlay */
+    filter: drop-shadow(0 3px 5px rgba(0,0,0,0.3)); /* Shadow for the indicator */
 }
 
 
 #spinButton {
     position: absolute;
-    width: 100px;
-    height: 100px;
-    background-color: #dc3545;
-    color: white;
-    border: none;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Removed transformY for stability */
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
-    font-size: 1.5em;
+    background-color: var(--accent-color);
+    color: white;
+    font-size: 1.8em;
     font-weight: bold;
+    border: 6px solid white;
     cursor: pointer;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
     z-index: 10;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    text-transform: uppercase;
 }
 
-#spinButton:hover:not(:disabled) {
-    background-color: #c82333;
-    transform: scale(1.05);
+#spinButton:hover {
+    background-color: #009999;
+    transform: translate(-50%, -50%) scale(1.08); /* Scale effect on hover */
 }
 
 #spinButton:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+    transform: translate(-50%, -50%); /* Ensure no additional transform when disabled */
     box-shadow: none;
 }
 
@@ -360,201 +434,194 @@ header h1 {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 180px;
-    height: 80px;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.85);
     color: white;
-    font-size: 2em;
+    padding: 15px 30px;
+    border-radius: 12px;
+    font-size: 2.5em;
     font-weight: bold;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    pointer-events: none;
+    display: none;
     z-index: 11;
-    display: none; /* Hidden by default */
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
-    animation: fadeInOut 2s forwards;
-}
-
-@keyframes fadeInOut {
-    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-    20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    animation: fadeScaleIn 0.5s ease-out;
 }
 
 /* Player Score */
 #players {
-    width: 100%;
+    text-align: center;
     margin-bottom: 20px;
 }
 
 .player {
-    background-color: #e9ecef;
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
+    border: 3px solid var(--primary-color);
     padding: 15px;
-    text-align: center;
-    transition: all 0.3s ease;
+    border-radius: 10px;
+    background-color: #FFE4E1; /* Màu misty rose - nhẹ nhàng, dễ thương */
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .player.active {
-    background-color: #d1ecf1;
-    border-color: #bee5eb;
-    box-shadow: 0 0 15px rgba(0, 123, 255, 0.2);
-    transform: translateY(-5px);
+    border-color: var(--accent-color);
+    box-shadow: 0 0 15px rgba(0, 123, 255, 0.4);
 }
 
 .player h3 {
-    color: #0056b3;
     margin-top: 0;
-    margin-bottom: 10px;
+    color: var(--dark-text-color);
     font-size: 1.5em;
 }
 
 .player p {
-    font-size: 1.2em;
-    color: #495057;
-}
-
-.player span {
-    font-size: 1.8em;
+    font-size: 1.4em;
     font-weight: bold;
-    color: #28a745;
+    color: var(--text-color);
 }
 
 /* Guess Input */
 #guessInputContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    padding: 20px;
-    background-color: #eaf0f6;
+    margin-top: 20px;
+    text-align: center;
+    padding: 15px;
+    background-color: #F0F8FF; /* Light azure */
     border-radius: 10px;
-    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.03);
-    width: 100%;
-    box-sizing: border-box;
-    display: none; /* Hidden by default */
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+    border: 2px solid var(--color-lime-green);
 }
 
 #guessInputLabel {
-    font-size: 1.2em;
-    color: #333;
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1.3em;
+    color: var(--dark-text-color);
+    font-weight: bold;
 }
 
 #guessLetter {
-    width: 80%;
-    padding: 12px;
-    font-size: 1.5em;
+    padding: 10px;
+    font-size: 1.6em;
     text-align: center;
-    border: 2px solid #ccc;
-    border-radius: 8px;
-    outline: none;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
     text-transform: uppercase;
-}
-
-#guessLetter:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
-}
-
-.guess-buttons {
-    display: flex;
-    gap: 15px;
-    width: 100%;
-    justify-content: center;
+    width: calc(100% - 20px);
+    max-width: 250px;
+    border: 2px solid var(--accent-color);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .guess-buttons button {
-    padding: 12px 25px;
-    font-size: 1.1em;
-    font-weight: bold;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    background-color: var(--secondary-color);
+    color: white;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin: 6px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
-.guess-buttons button:first-child {
-    background-color: #007bff;
-    color: white;
-}
-
-.guess-buttons button:first-child:hover:not(:disabled) {
-    background-color: #0056b3;
-    transform: translateY(-2px);
-}
-
-#buyLetterButton {
-    background-color: #ffc107;
-    color: #333;
-}
-
-#buyLetterButton:hover:not(:disabled) {
-    background-color: #e0a800;
-    transform: translateY(-2px);
+.guess-buttons button:hover {
+    background-color: #7B00D8;
+    transform: translateY(-3px);
 }
 
 .guess-buttons button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+    transform: none;
     box-shadow: none;
-    color: #666;
 }
 
-/* Game Notification */
+#buyLetterButton {
+    background-color: var(--color-gold);
+    color: #333;
+}
+#buyLetterButton:hover {
+    background-color: #e0a800;
+}
+#buyLetterButton.disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+}
+
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 15px;
+    background: linear-gradient(90deg, var(--secondary-color), var(--color-purple)); /* Gradient cho footer */
+    color: white;
+    margin-top: 15px;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    font-size: 0.95em;
+    box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Notification Overlay */
 #gameNotification {
     position: fixed;
-    top: 50%;
+    bottom: 70px;
     left: 50%;
-    transform: translate(-50%, -50%) scale(0.8);
-    background-color: rgba(0, 0, 0, 0.85);
-    color: white;
-    padding: 15px 25px; /* Tăng khoảng đệm để thông báo to hơn */
+    transform: translateX(-50%);
+    background-color: var(--info-bg-color);
+    color: var(--info-text-color);
+    padding: 15px 30px;
     border-radius: 10px;
-    font-size: 1.5em; /* Tăng kích thước chữ */
-    text-align: center;
+    font-size: 1.2em;
+    font-weight: bold;
+    z-index: 990;
     opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.7s ease-in-out, transform 0.7s ease-in-out; /* Thời gian chuyển đổi dài hơn */
-    z-index: 1000; /* Đảm bảo nó luôn ở trên cùng */
-    min-width: 300px; /* Make sure it's not too small */
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    visibility: hidden;
+    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    min-width: 200px;
+    text-align: center;
 }
 
 #gameNotification.show {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
+    visibility: visible;
 }
 
-#gameNotification.info { background-color: rgba(0, 123, 255, 0.85); }
-#gameNotification.success { background-color: rgba(40, 167, 69, 0.85); }
-#gameNotification.warning { background-color: rgba(255, 193, 7, 0.85); color: #333;}
-#gameNotification.error { background-color: rgba(220, 53, 69, 0.85); }
+#gameNotification.error {
+    background-color: var(--error-bg-color);
+    color: var(--error-text-color);
+}
+#gameNotification.success {
+    background-color: var(--success-bg-color);
+    color: var(--success-text-color);
+}
+#gameNotification.warning {
+    background-color: var(--warning-bg-color);
+    color: var(--warning-text-color);
+}
 
-/* Win Overlay (for end of question/game) */
+/* Win Overlay */
 #winOverlay {
+    display: none;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0.8);
-    background: linear-gradient(45deg, #a8ff78, #78ffd6); /* Gradient for a celebratory look */
-    color: #2e7d32; /* Dark green text */
-    padding: 30px 40px; /* Tăng khoảng đệm */
+    background: linear-gradient(45deg, var(--accent-color), var(--color-deep-sky-blue)); /* Gradient cho win overlay */
+    color: white;
+    padding: 40px 60px;
     border-radius: 20px;
-    font-size: 2em; /* Tăng kích thước chữ cho thông báo chiến thắng */
+    font-size: 2.5em;
     font-weight: bold;
     text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 40px rgba(168, 255, 120, 0.7);
+    z-index: 1000;
+    box-shadow: 0 0 30px rgba(0, 123, 255, 0.6);
     opacity: 0;
-    display: none; /* Hidden by default */
-    transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out; /* Thời gian chuyển đổi dài hơn */
-    z-index: 1001; /* Cao hơn cả gameNotification */
-    min-width: 400px;
+    transition: all 0.5s ease-out;
+    letter-spacing: 1px;
 }
 
 /* Music Toggle Button */
@@ -562,113 +629,302 @@ header h1 {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    padding: 10px 15px;
     background-color: #6c757d;
     color: white;
+    padding: 10px 15px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 0.9em;
+    font-size: 1em;
     z-index: 999;
-    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 #musicToggle.playing {
-    background-color: #28a745; /* Green when playing */
+    background-color: #17a2b8;
 }
 
 #musicToggle:hover {
     background-color: #5a6268;
-}
-
-/* Footer */
-footer {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: #aaa;
-    font-size: 0.8em;
-    text-align: center;
-    width: 100%;
+    transform: translateY(-2px);
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+@media (max-width: 992px) {
     .main-content {
         flex-direction: column;
         align-items: center;
+        gap: 15px;
     }
 
     .left-panel, .right-panel {
         min-width: unset;
-        width: 100%;
+        width: 98%;
         padding: 15px;
     }
 
-    header h1 {
-        font-size: 2em;
-    }
-
     #wheel-container {
-        width: 250px;
-        height: 250px;
-    }
-
-    #spinButton {
-        width: 80px;
-        height: 80px;
-        font-size: 1.2em;
+        width: 350px;
+        height: 350px;
+        margin: 20px auto;
     }
 
     .letter-box {
-        width: 35px;
-        height: 45px;
+        width: 38px;
+        height: 52px;
+        font-size: 1.8em;
+    }
+
+    #spinButton {
+        width: 100px;
+        height: 100px;
         font-size: 1.5em;
     }
 
-    #guessLetter {
-        font-size: 1.2em;
-        padding: 10px;
+    #splashScreen h1 {
+        font-size: 2.8em;
+    }
+    
+    .splash-content p, .splash-content li {
+        font-size: 1.1em;
     }
 
-    .guess-buttons button {
-        padding: 10px 20px;
-        font-size: 1em;
+    #splashScreen .splash-buttons button {
+        font-size: 1.4em;
+        padding: 12px 25px;
     }
 
     #gameNotification {
-        font-size: 1.2em;
-        padding: 12px 20px;
+        font-size: 1.1em;
+        padding: 15px 25px;
+        bottom: 60px;
     }
+
     #winOverlay {
+        font-size: 2em;
+        padding: 30px 40px;
+    }
+}
+
+@media (max-width: 576px) {
+    .game-wrapper {
+        border-radius: 0;
+        max-width: none;
+        box-shadow: none;
+        min-height: 100vh; /* Make sure it takes full height */
+    }
+    header {
+        border-radius: 0;
+        padding: 15px 10px;
+    }
+    footer {
+        border-radius: 0;
+        padding: 12px 10px;
+    }
+
+    #splashScreen {
+        justify-content: flex-start;
+        padding: 15px;
+    }
+
+    .splash-content {
+        padding: 20px;
+        margin-top: 5vh; /* Thêm khoảng trống ở trên */
+    }
+
+    #splashScreen h1 {
+        font-size: 2.2em;
+    }
+
+    .splash-content p, .splash-content li {
+        font-size: 1em;
+        line-height: 1.5;
+    }
+    
+    .splash-content .details h2 {
+        font-size: 1.3em;
+    }
+
+    #splashScreen .splash-buttons {
+        margin-top: 20px;
+        gap: 15px;
+    }
+
+    #splashScreen .splash-buttons button {
+        font-size: 1.1em;
+        padding: 10px 20px;
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .main-content {
+        padding: 10px; /* Giảm padding tổng thể */
+        gap: 10px; /* Giảm khoảng cách giữa các panel */
+    }
+
+    .left-panel, .right-panel {
+        padding: 10px; /* Giảm padding của panel */
+    }
+
+    header h1 {
         font-size: 1.5em;
+    }
+
+    #question {
+        font-size: 1.2em;
+        margin-bottom: 10px; /* Giảm khoảng cách */
+        padding: 8px;
+    }
+
+    .answer-container {
+        gap: 4px;
+        margin-bottom: 15px; /* Giảm khoảng cách */
+    }
+    .answer-group {
+        gap: 1px;
+        margin: 0 2px;
+    }
+    .letter-box {
+        width: 28px;
+        height: 38px;
+        font-size: 1.3em;
+        border-width: 2px;
+    }
+    .word-space {
+        width: 15px;
+        height: 38px;
+    }
+
+    #wheel-container {
+        width: 220px; /* Giảm kích thước bánh xe để tiết kiệm không gian */
+        height: 220px;
+        margin: 15px auto 10px auto; /* Giảm margin dưới */
+        border-width: 6px;
+    }
+    #wheel-indicator {
+        top: -15px; /* Điều chỉnh vị trí mũi tên */
+        border-left: 15px solid transparent;
+        border-right: 15px solid transparent;
+        border-bottom: 25px solid var(--primary-color);
+    }
+    #spinButton {
+        width: 65px;
+        height: 65px;
+        font-size: 1em;
+        border-width: 3px;
+        /* Đảm bảo transform ban đầu không bị ảnh hưởng bởi hover */
+        transform: translate(-50%, -50%); 
+    }
+    #spinButton:hover {
+        transform: translate(-50%, -50%) scale(1.08); /* Giữ nguyên hiệu ứng scale khi hover */
+    }
+
+
+    #resultOverlay {
+        font-size: 1.5em;
+        padding: 8px 15px;
+    }
+
+    .player {
+        padding: 10px;
+        margin-bottom: 10px;
+        border-width: 2px;
+    }
+    .player h3 {
+        font-size: 1.2em;
+    }
+    .player p {
+        font-size: 1em;
+    }
+
+    #guessInputContainer {
+        margin-top: 10px; /* Giảm khoảng cách */
+        padding: 10px;
+    }
+    #guessInputLabel {
+        font-size: 1em;
+        margin-bottom: 8px;
+    }
+    #guessLetter {
+        padding: 6px;
+        font-size: 1.2em;
+        max-width: 150px;
+        margin-bottom: 10px;
+    }
+    .guess-buttons button {
+        padding: 8px 12px;
+        font-size: 0.9em;
+        margin: 5px;
+    }
+
+    #musicToggle {
+        padding: 6px 10px;
+        font-size: 0.8em;
+        bottom: 10px;
+        right: 10px;
+    }
+
+    #gameNotification {
+        font-size: 0.9em;
+        padding: 10px 15px;
+        bottom: 50px;
+    }
+
+    #winOverlay {
+        font-size: 1.2em;
         padding: 20px 30px;
     }
 }
 
-@media (max-width: 480px) {
-    .splash-content {
-        padding: 20px;
-    }
-    .splash-content h1 {
-        font-size: 2.5em;
-    }
-    .splash-buttons {
-        flex-direction: column;
-        gap: 10px;
-    }
-    .splash-buttons button {
-        width: 80%;
-        max-width: 250px;
-    }
+@media (max-width: 400px) {
+    /* Further adjustments for very small phones */
     .letter-box {
-        width: 30px;
-        height: 40px;
-        font-size: 1.3em;
+        width: 24px;
+        height: 34px;
+        font-size: 1.1em;
     }
-    #gameNotification, #winOverlay {
-        width: 90%;
-        min-width: unset;
+    .word-space {
+        width: 12px;
+        height: 34px;
+    }
+    #wheel-container {
+        width: 180px; /* Giảm thêm kích thước bánh xe */
+        height: 180px;
+        border-width: 5px;
+        margin: 10px auto 5px auto; /* Giảm margin dưới nữa */
+    }
+    #wheel-indicator {
+        top: -10px; /* Điều chỉnh vị trí mũi tên */
+        border-left: 12px solid transparent;
+        border-right: 12px solid transparent;
+        border-bottom: 20px solid var(--primary-color);
+    }
+    #spinButton {
+        width: 50px;
+        height: 50px;
+        font-size: 0.85em;
+    }
+    #resultOverlay {
+        font-size: 1.1em;
+        padding: 5px 10px;
+    }
+    #guessLetter {
+        font-size: 1em;
+        max-width: 100px;
+        padding: 5px;
+    }
+    .guess-buttons button {
+        font-size: 0.75em;
+        padding: 5px 8px;
+        margin: 4px;
+    }
+
+    #splashScreen h1 {
+        font-size: 1.8em;
+    }
+    
+    #splashScreen .splash-buttons button {
+        font-size: 1em;
     }
 }
