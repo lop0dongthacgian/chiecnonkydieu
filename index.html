@@ -401,49 +401,58 @@
         let index = Math.floor((360 - (finalAngle % 360) + (360 / numSegments / 2)) / (360 / numSegments)) % numSegments;
         const result = originalSegments[index].text;
 
-        resultOverlay.innerText = result;
+        // --- BẮT ĐẦU KHỐI MÃ ĐÃ SỬA ---
+        
+        // Đặt màu nền và hiển thị overlay trước
         resultOverlay.style.background = originalSegments[index].color;
         resultOverlay.style.display = "block";
 
         if (!isNaN(parseInt(result))) {
+          resultOverlay.innerText = `+${result} điểm!`; // Thông báo rõ ràng hơn
           currentSpinValue = parseInt(result);
           isGuessingLetter = true;
           isGuessingFullAnswer = false;
           updateGuessInputVisibility();
-          showNotification(`Kết quả: +${result}! Nhập chữ cái bạn muốn đoán.`, 3000, 'info', 'tb23.wav');
+          showNotification(`Bạn quay được ${result} điểm! Mời đoán một chữ cái.`, 3000, 'info', 'tb23.wav');
         } else if (result === "Nhân đôi") {
+          resultOverlay.innerText = `NHÂN ĐÔI ĐIỂM!`; // Thông báo rõ ràng hơn
           currentSpinValue = "double";
           isGuessingLetter = true;
           isGuessingFullAnswer = false;
           updateGuessInputVisibility();
           showNotification(`Kết quả: Nhân đôi! Nhập chữ cái bạn muốn đoán.`, 3000, 'info', 'tb7.wav');
         } else if (result === "Đoán chữ") {
+          resultOverlay.innerText = `ĐOÁN CẢ Ô CHỮ!`; // Thông báo rõ ràng hơn
           isGuessingLetter = false;
           isGuessingFullAnswer = true;
           currentSpinValue = null;
           updateGuessInputVisibility();
           showNotification(`Kết quả: Đoán chữ! Nhập toàn bộ đáp án.`, 3000, 'info', 'tb8.wav');
         } else if (result === "May mắn") {
+            resultOverlay.innerText = `Ô MAY MẮN!`; // Thông báo rõ ràng hơn
             currentSpinValue = null;
             isGuessingLetter = false;
             isGuessingFullAnswer = false;
-            revealRandomLetter(); // Now only reveals a letter
-            scores[0] += 300;     // Add points directly
-            updateScores();       // Update the score display
+            revealRandomLetter();
+            scores[0] += 300;
+            updateScores();
             showNotification(`Chúc mừng bạn quay trúng ô: May mắn! Một chữ cái đã được nhập và 300 điểm đã được cộng.`, 3000, 'success', 'tb9.wav');
             document.getElementById("spinButton").disabled = false;
             guessInputContainer.style.display = "none";
-            setTimeout(() => { resultOverlay.style.display = "none"; }, 1500);
+            setTimeout(() => { resultOverlay.style.display = "none"; }, 5000);
             updateBuyLetterButtonState();
         } else {
+          resultOverlay.innerText = result; // Giữ nguyên cho các trường hợp khác nếu có
           currentSpinValue = null;
           isGuessingLetter = false;
           isGuessingFullAnswer = false;
           showNotification(`Kết quả không xác định: ${result}. Vui lòng quay lại.`, 3000, 'warning', 'tb10.wav');
           document.getElementById("spinButton").disabled = false;
           guessInputContainer.style.display = "none";
-          setTimeout(() => { resultOverlay.style.display = "none"; }, 1500);
+          setTimeout(() => { resultOverlay.style.display = "none"; }, 5000);
         }
+
+        // --- KẾT THÚC KHỐI MÃ ĐÃ SỬA ---
 
         spinning = false;
 
