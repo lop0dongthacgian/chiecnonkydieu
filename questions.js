@@ -405,5 +405,5 @@ const allQuestions = [
         question: "You go to this place to study. (Bạn đến nơi này để học.)",
         answer: ["S", "C", "H", "O", "O", "L"],
         plainAnswer: ["S", "C", "H", "O", "O", "L"]
-    },
+    }
 ];
