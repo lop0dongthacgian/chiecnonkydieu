@@ -265,5 +265,25 @@ const allQuestions = [
         question: "Color of fire trucks. (Xe cứu hỏa màu gì?)",
         answer: ['R', 'E', 'D'],
         plainAnswer: ['R', 'E', 'D'] // RED
-    }
+    },
+    // Unit 17: Jobs (Nghề nghiệp)
+{
+    question: "Who teaches you at school? (Ai dạy bạn ở trường?)",
+    answer: ['T', 'E', 'A', 'C', 'H', 'E', 'R'],
+    plainAnswer: ['T', 'E', 'A', 'C', 'H', 'E', 'R'] // TEACHER
+},
+{
+    question: "Who helps sick people in the hospital? (Ai giúp người bệnh ở bệnh viện?)",
+    answer: ['D', 'O', 'C', 'T', 'O', 'R'],
+    plainAnswer: ['D', 'O', 'C', 'T', 'O', 'R'] // DOCTOR
+},
+
+// Unit 18: Opposites (Từ trái nghĩa)
+{
+    question: "What is the opposite of 'hot'? (Từ trái nghĩa với 'hot' là gì?)",
+    answer: ['C', 'O', 'L', 'D'],
+    plainAnswer: ['C', 'O', 'L', 'D'] // COLD
+}
+
+    
 ];
