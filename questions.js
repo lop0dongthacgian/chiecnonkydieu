@@ -27,6 +27,12 @@ const allQuestions = [
         answer: ["G", "R", "A", "N", "D", "M", "A"],
         plainAnswer: ["G", "R", "A", "N", "D", "M", "A"]
     },
+    // New question added
+    {
+        question: "Who is your father's brother? (Chú/Cậu của bạn là ai?)",
+        answer: ['U', 'N', 'C', 'L', 'E'],
+        plainAnswer: ['U', 'N', 'C', 'L', 'E']
+    },
 
     // Unit 2: My School (Trường học của tôi) - 10 questions
     {
@@ -565,6 +571,12 @@ const allQuestions = [
         question: "A vehicle that runs on rails. (Một phương tiện chạy trên đường ray.)",
         answer: ['T', 'R', 'A', 'I', 'N'],
         plainAnswer: ['T', 'R', 'A', 'I', 'N'] // TRAIN
+    },
+    // New question added
+    {
+        question: "What do you ride on water? (Bạn đi trên gì ở dưới nước?)",
+        answer: ['B', 'O', 'A', 'T'],
+        plainAnswer: ['B', 'O', 'A', 'T']
     },
 
     // Unit 14: Feelings (Cảm xúc) - 5 questions
