@@ -405,5 +405,71 @@ const allQuestions = [
         question: "What is the opposite of 'hot'? (Từ trái nghĩa với 'hot' là gì?)",
         answer: ['C', 'O', 'L', 'D'],
         plainAnswer: ['C', 'O', 'L', 'D'] // COLD
+    },
+        {
+        question: "You wear these on your hands in winter. (Bạn mang gì vào tay khi trời lạnh?)",
+        answer: ['G','L','O','V','E','S'],
+        plainAnswer: ['G','L','O','V','E','S']
+    },
+    {
+        question: "This is a place where you play at school. (Đây là nơi bạn chơi ở trường.)",
+        answer: ['P','L','A','Y','G','R','O','U','N','D'],
+        plainAnswer: ['P','L','A','Y','G','R','O','U','N','D']
+    },
+    {
+        question: "You use this to cut paper. (Bạn dùng cái này để cắt giấy.)",
+        answer: ['S','C','I','S','S','O','R','S'],
+        plainAnswer: ['S','C','I','S','S','O','R','S']
+    },
+    {
+        question: "You color pictures with this. (Bạn tô màu tranh với cái này.)",
+        answer: ['C','R','A','Y','O','N'],
+        plainAnswer: ['C','R','A','Y','O','N']
+    },
+    {
+        question: "You carry your lunch in this. (Bạn mang bữa trưa trong cái này.)",
+        answer: ['L','U','N','C','H','B','O','X'],
+        plainAnswer: ['L','U','N','C','H','B','O','X']
+    },
+    {
+        question: "You go here to swim. (Bạn đến đây để bơi.)",
+        answer: ['P','O','O','L'],
+        plainAnswer: ['P','O','O','L']
+    },
+    {
+        question: "You do this with a pencil to make words. (Bạn làm điều này với bút chì để tạo từ.)",
+        answer: ['W','R','I','T','E'],
+        plainAnswer: ['W','R','I','T','E']
+    },
+    {
+        question: "Opposite of big. (Trái nghĩa với 'to')",
+        answer: ['S','M','A','L','L'],
+        plainAnswer: ['S','M','A','L','L']
+    },
+    {
+        question: "You go here to watch a movie. (Bạn đến đây để xem phim.)",
+        answer: ['C','I','N','E','M','A'],
+        plainAnswer: ['C','I','N','E','M','A']
+    },
+    {
+        question: "Color of bananas. (Màu của quả chuối là gì?)",
+        answer: ['Y','E','L','L','O','W'],
+        plainAnswer: ['Y','E','L','L','O','W']
+    },
+    {
+        question: "You brush these every morning. (Bạn đánh những cái này mỗi sáng.)",
+        answer: ['T','E','E','T','H'],
+        plainAnswer: ['T','E','E','T','H']
+    },
+    {
+        question: "What you wear to go to bed. (Bạn mặc gì khi đi ngủ?)",
+        answer: ['P','A','J','A','M','A','S'],
+        plainAnswer: ['P','A','J','A','M','A','S']
+    },
+    {
+        question: "Opposite of slow. (Trái nghĩa với 'chậm')",
+        answer: ['F','A','S','T'],
+        plainAnswer: ['F','A','S','T']
     }
+
 ];
