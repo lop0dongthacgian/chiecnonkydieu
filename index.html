@@ -127,21 +127,13 @@
     let isMusicPlaying = false; 
     let hasUserInteracted = false; 
 
-    // --- Audio Playback Functions ---
-    let currentAudio = null;
-
     function playNotificationSound(filename) {
-        if (currentAudio) {
-            currentAudio.pause();
-            currentAudio.currentTime = 0;
-        }
-        currentAudio = new Audio(`audio/${filename}`);
-        currentAudio.play().catch(e => {
+        const audio = new Audio(`audio/${filename}`);
+        audio.play().catch(e => {
             console.warn(`Error playing sound ${filename}:`, e);
         });
     }
 
-    // --- Splash Screen Logic ---
     playInstructionsButton.addEventListener('click', () => {
         if (!instructionAudio.paused) {
             instructionAudio.pause();
@@ -182,7 +174,6 @@
         }, { once: true });
     });
 
-    // --- Chức năng nhạc nền ---
     function toggleMusic() {
         if (isMusicPlaying) {
             backgroundMusic.pause();
@@ -204,7 +195,7 @@
     }
     musicToggleBtn.addEventListener('click', toggleMusic);
 
-    function showNotification(message, duration = 3000, type = 'info', audioFilename = null) {
+    function showNotification(message, duration = 5000, type = 'info', audioFilename = null) {
         if (gameNotification.timeoutId) {
             clearTimeout(gameNotification.timeoutId);
         }
@@ -223,7 +214,7 @@
         }, duration);
     }
 
-    function showWinOverlay(message, duration = 3000, audioFilename = null) {
+    function showWinOverlay(message, duration = 6000, audioFilename = null) {
         winOverlay.textContent = message;
         winOverlay.style.display = 'flex';
         winOverlay.style.opacity = '1';
@@ -244,7 +235,7 @@
     function getRandomQuestionIndex() {
         if (availableQuestionIndices.length === 0) {
             if (allQuestions.length > 0) {
-                showNotification("Bạn đã hoàn thành tất cả các câu hỏi! Bắt đầu lại bộ câu hỏi.", 3000, 'info', 'tb3.wav');
+                showNotification("Bạn đã hoàn thành tất cả các câu hỏi! Bắt đầu lại bộ câu hỏi.", 5000, 'info', 'tb3.wav');
                 for (let i = 0; i < allQuestions.length; i++) {
                     availableQuestionIndices.push(i);
                 }
@@ -281,13 +272,13 @@
       });
       questionElement.innerHTML = `<strong>Câu hỏi (${askedQuestionIndices.length}/${allQuestions.length}):</strong> ${currentQuestion.question}`;
       renderAnswerBoxes();
-      renderWheelSegments(); // Vẽ lại bánh xe, không cần reset vì nó không đổi
+      renderWheelSegments(); 
       updateScores();
       document.getElementById("spinButton").disabled = false;
       guessInputContainer.style.display = "none";
       resultOverlay.style.display = "none";
       document.getElementById("player1").classList.add("active");
-      showNotification(`Bắt đầu câu hỏi mới! Mời bạn quay nón.`, 3000, 'info', 'tb4.wav');
+      showNotification(`Bắt đầu câu hỏi mới! Mời bạn quay nón.`, 5000, 'info', 'tb4.wav');
       updateBuyLetterButtonState();
     }
 
@@ -364,25 +355,25 @@
           isGuessingLetter = true;
           isGuessingFullAnswer = false;
           updateGuessInputVisibility();
-          showNotification(`Kết quả: +${result}! Nhập chữ cái bạn muốn đoán.`, 3000, 'info', 'tb23.wav');
+          showNotification(`Kết quả: +${result}! Nhập chữ cái bạn muốn đoán.`, 5000, 'info', 'tb23.wav');
         } else if (result === "Nhân đôi") {
           currentSpinValue = "double";
           isGuessingLetter = true;
           isGuessingFullAnswer = false;
           updateGuessInputVisibility();
-          showNotification(`Kết quả: Nhân đôi! Nhập chữ cái bạn muốn đoán.`, 3000, 'info', 'tb7.wav');
+          showNotification(`Kết quả: Nhân đôi! Nhập chữ cái bạn muốn đoán.`, 5000, 'info', 'tb7.wav');
         } else if (result === "Đoán chữ") {
           isGuessingLetter = false;
           isGuessingFullAnswer = true;
           currentSpinValue = null;
           updateGuessInputVisibility();
-          showNotification(`Kết quả: Đoán chữ! Nhập toàn bộ đáp án.`, 3000, 'info', 'tb8.wav');
+          showNotification(`Kết quả: Đoán chữ! Nhập toàn bộ đáp án.`, 5000, 'info', 'tb8.wav');
         } else if (result === "May mắn") {
             currentSpinValue = null;
             isGuessingLetter = false;
             isGuessingFullAnswer = false;
             revealRandomLetter();
-            showNotification(`Kết quả bạn quay trúng ô: May mắn! Một chữ cái đã được nhập.`, 3000, 'success', 'tb9.wav');
+            showNotification(`Kết quả bạn quay trúng ô: May mắn! Một chữ cái đã được nhập.`, 5000, 'success', 'tb9.wav');
             document.getElementById("spinButton").disabled = false;
             guessInputContainer.style.display = "none";
             setTimeout(() => { resultOverlay.style.display = "none"; }, 1500);
@@ -391,7 +382,7 @@
           currentSpinValue = null;
           isGuessingLetter = false;
           isGuessingFullAnswer = false;
-          showNotification(`Kết quả không xác định: ${result}. Vui lòng quay lại.`, 3000, 'warning', 'tb10.wav');
+          showNotification(`Kết quả không xác định: ${result}. Vui lòng quay lại.`, 5000, 'warning', 'tb10.wav');
           document.getElementById("spinButton").disabled = false;
           guessInputContainer.style.display = "none";
           setTimeout(() => { resultOverlay.style.display = "none"; }, 1500);
@@ -450,7 +441,7 @@
             checkGameCompletion();
             return true;
         } else {
-            showNotification("Không còn chữ cái nào để nhâp. Đáp án đã được mở hết.", 3000, 'info', 'tb18.wav');
+            showNotification("Không còn chữ cái nào để nhâp. Đáp án đã được mở hết.", 5000, 'info', 'tb18.wav');
             return false;
         }
     }
@@ -458,14 +449,14 @@
     function buyLetter() {
         const COST_OF_LETTER = 500;
         if (scores[0] < COST_OF_LETTER) {
-            showNotification(`Bạn không đủ ${COST_OF_LETTER} điểm để mua chữ.`, 3000, 'error', 'tb19.wav');
+            showNotification(`Bạn không đủ ${COST_OF_LETTER} điểm để mua chữ.`, 5000, 'error', 'tb19.wav');
             return;
         }
         const letterRevealed = revealRandomLetter();
         if (letterRevealed) {
             scores[0] -= COST_OF_LETTER; 
             updateScores();
-            showNotification(`Bạn đã mua một chữ với giá -${COST_OF_LETTER} điểm!`, 3000, 'success', 'tb20.wav');
+            showNotification(`Bạn đã mua một chữ với giá -${COST_OF_LETTER} điểm!`, 5000, 'success', 'tb20.wav');
             guessInputContainer.style.display = "none";
             document.getElementById("spinButton").disabled = false; 
             updateBuyLetterButtonState();
@@ -486,12 +477,12 @@
     function submitGuess() {
       const guess = guessInput.value.toUpperCase().trim();
       if (!guess) {
-        showNotification('Vui lòng nhập nội dung bạn đã đoán.', 3000, 'warning', 'tb11.wav');
+        showNotification('Vui lòng nhập nội dung bạn đã đoán.', 5000, 'warning', 'tb11.wav');
         return;
       }
       if (isGuessingLetter) {
         if (guess.length !== 1) {
-            showNotification('Vui lòng chỉ nhập 1 ký tự để đoán chữ cái.', 3000, 'warning', 'tb12.wav');
+            showNotification('Vui lòng chỉ nhập 1 ký tự để đoán chữ cái.', 5000, 'warning', 'tb12.wav');
             return;
         }
         processLetterGuess(guess);
@@ -520,15 +511,15 @@
         let earned = 0;
         if (currentSpinValue === "double") {
           earned = matched * 2 * 200;
-          showNotification(`Chính xác! Bạn đoán đúng ${matched} chữ. Được x2 điểm, nhận +${earned} điểm.`, 3000, 'success', 'tb13.wav');
+          showNotification(`Chính xác! Bạn đoán đúng ${matched} chữ. Được x2 điểm, nhận +${earned} điểm.`, 5000, 'success', 'tb13.wav');
         } else {
           earned = matched * currentSpinValue;
-          showNotification(`Chính xác! Bạn đoán đúng ${matched} chữ. Nhận +${earned} điểm.`, 3000, 'success', 'tb14.wav');
+          showNotification(`Chính xác! Bạn đoán đúng ${matched} chữ. Nhận +${earned} điểm.`, 5000, 'success', 'tb14.wav');
         }
         scores[0] += earned;
       } else {
         scores[0] -= 300; 
-        showNotification(`Sai rồi! Bạn đoán chữ '${letter}' không có hoặc đã mở. Bị trừ 300 điểm.`, 3000, 'error', 'tb15.wav');
+        showNotification(`Sai rồi! Bạn đoán chữ '${letter}' không có hoặc đã mở. Bị trừ 300 điểm.`, 5000, 'error', 'tb15.wav');
       }
       updateScores();
       isGuessingLetter = false;
@@ -554,12 +545,12 @@
                   }
               }
           }
-          showNotification(`Chính xác! Bạn đoán đúng toàn bộ đáp án. Nhận +${earned} điểm.`, 3000, 'success', 'tb16.wav');
+          showNotification(`Chính xác! Bạn đoán đúng toàn bộ đáp án. Nhận +${earned} điểm.`, 5000, 'success', 'tb16.wav');
           updateScores();
           checkGameCompletion();
       } else {
           scores[0] -= 300; 
-          showNotification(`Sai rồi! Bạn đoán sai toàn bộ đáp án. Bị trừ 300 điểm.`, 3000, 'error', 'tb17.wav');
+          showNotification(`Sai rồi! Bạn đoán sai toàn bộ đáp án. Bị trừ 300 điểm.`, 5000, 'error', 'tb17.wav');
       }
       updateScores();
       isGuessingFullAnswer = false;
@@ -575,10 +566,10 @@
     function checkGameCompletion() {
       const allLetterBoxesFilled = revealedLetters.every(char => char !== null && char !== " ");
       if (allLetterBoxesFilled) {
-        showWinOverlay(`Chúc mừng! Bạn đã hoàn thành câu hỏi này với ${scores[0]} điểm!`, 4000, 'tb21.wav');
+        showWinOverlay(`Chúc mừng! Bạn đã hoàn thành câu hỏi này với ${scores[0]} điểm!`, 6000, 'tb21.wav');
         setTimeout(() => {
           initializeGame();
-        }, 6000); // Tăng từ 4000ms thành 6000ms
+        }, 6000);
       }
     }
 
