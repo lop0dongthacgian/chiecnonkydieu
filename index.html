@@ -5,13 +5,73 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chiếc Nón Kỳ Diệu - Family & Friends</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Fireworks CSS - Phiên bản cải tiến */
+    .fireworks {
+      position: fixed;
+      top: 0; 
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none; /* Cho phép click xuyên qua lớp pháo hoa */
+      z-index: 9999;
+      overflow: hidden;
+      background: transparent;
+    }
+
+    .firework {
+      position: absolute;
+      width: 5px; /* Chiều rộng của vệt pháo hoa */
+      height: 5px; /* Chiều cao của vệt pháo hoa */
+      border-radius: 50%;
+      opacity: 0; /* Bắt đầu với trạng thái trong suốt */
+      /* Sử dụng animation mới:
+        - `fireworks-animation`: Tên animation.
+        - `1.2s`: Thời gian chạy animation.
+        - `ease-out`: Bắt đầu nhanh và chậm dần về cuối.
+        - `forwards`: Giữ lại trạng thái cuối cùng của animation (biến mất).
+      */
+      animation: fireworks-animation 1.2s ease-out forwards;
+    }
+
+    @keyframes fireworks-animation {
+      0% {
+        /* Bắt đầu:
+          - Hiện rõ, kích thước nhỏ.
+          - Di chuyển lên trên một chút để tạo lực đẩy ban đầu.
+        */
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        box-shadow: 0 0 5px #fff, 0 0 10px #ff0, 0 0 15px #f0c;
+      }
+      50% {
+        /*
+          Giữa chừng:
+          - Vẫn còn sáng rõ.
+          - Kích thước lớn nhất.
+        */
+        opacity: 0.8;
+        transform: translateY(-80px) scale(1.5);
+      }
+      100% {
+        /*
+          Kết thúc:
+          - Hoàn toàn trong suốt (biến mất).
+          - Di chuyển xuống dưới (hiệu ứng rơi) và co lại.
+          - Ánh sáng mờ đi.
+        */
+        opacity: 0;
+        transform: translateY(40px) scale(0.8);
+        box-shadow: none;
+      }
+    }
+  </style>
 </head>
 <body>
   <div id="splashScreen">
     <div class="splash-content">
         <h1>Chiếc Nón Kỳ Diệu</h1>
         <p class="intro">🧩 Trò chơi đoán chữ "Chiếc nón kỳ diệu" vốn rất được mọi người yêu thích, nay đã được <span class="highlight-creator">Lớp học 0 đồng</span> phát triển thành phiên bản luyện từ vựng tiếng Anh dành cho các em nhỏ! 🇬🇧📚</p>
-        
         <div class="details">
             <h2>📝 Nội dung:</h2>
             <ul>
@@ -20,10 +80,8 @@
                 <li>🔹 Câu hỏi sẽ thay đổi <span class="highlight-update">định kỳ</span> để luôn mới mẻ và hấp dẫn!</li>
             </ul>
         </div>
-        
         <p class="outro">🎮 Trò chơi không chỉ giúp các cháu trong lớp ôn luyện mà còn phù hợp cho mọi học sinh đang học tiếng Anh, giúp các em <span class="highlight-benefit">vừa học vừa chơi – vui hè bổ ích!</span> 🌈</p>
     </div>
-
     <div class="splash-buttons">
       <button id="playInstructionsButton">Mở âm thanh hướng dẫn</button>
       <button id="startGameButton">Vào trò chơi</button>
@@ -68,6 +126,8 @@
   </div>
 
   <div id="gameNotification" class="info"></div>
+  <div id="winOverlay"></div>
+
   <button id="musicToggle" class="paused">Mở nhạc</button>
 
   <footer>
@@ -78,7 +138,6 @@
     <source src="nhacnen.mp3" type="audio/mpeg">
     Trình duyệt của bạn không hỗ trợ phần tử audio.
   </audio>
-
   <audio id="instructionAudio">
     <source src="audio/hd.mp3" type="audio/mpeg">
     Trình duyệt của bạn không hỗ trợ phần tử audio.
@@ -115,10 +174,7 @@
     const buyLetterButton = document.getElementById("buyLetterButton");
 
     const gameNotification = document.getElementById("gameNotification");
-    // Thêm một element cho thông báo chúc mừng riêng
-    const winOverlay = document.createElement('div');
-    winOverlay.id = 'winOverlay';
-    document.body.appendChild(winOverlay);
+    const winOverlay = document.getElementById('winOverlay'); // Lấy div từ HTML
 
     const backgroundMusic = document.getElementById("backgroundMusic");
     const musicToggleBtn = document.getElementById("musicToggle");
@@ -230,64 +286,83 @@
     musicToggleBtn.addEventListener('click', toggleMusic);
 
     function showNotification(message, duration = 3000, type = 'info', audioFilename = null) {
-        if (gameNotification.timeoutId) {
-            clearTimeout(gameNotification.timeoutId);
-        }
-
-        gameNotification.textContent = message;
-        gameNotification.className = `info ${type}`;
-        gameNotification.classList.add('show');
-        
-        if (audioFilename) {
-            playNotificationSound(audioFilename);
-        }
-
-        gameNotification.timeoutId = setTimeout(() => {
-            gameNotification.classList.remove('show');
-            gameNotification.addEventListener('transitionend', function handler() {
-                gameNotification.className = 'info';
-                gameNotification.removeEventListener('transitionend', handler);
-            }, { once: true });
-        }, duration);
+      if (gameNotification.timeoutId) clearTimeout(gameNotification.timeoutId);
+      gameNotification.textContent = message;
+      gameNotification.className = `info ${type}`;
+      gameNotification.classList.add('show');
+      if (audioFilename) playNotificationSound(audioFilename);
+      gameNotification.timeoutId = setTimeout(() => {
+        gameNotification.classList.remove('show');
+        gameNotification.addEventListener('transitionend', function handler() {
+          gameNotification.className = 'info';
+          gameNotification.removeEventListener('transitionend', handler);
+        }, { once: true });
+      }, duration);
     }
 
-    function showWinOverlay(message, duration = 3000, audioFilename = null) {
-        winOverlay.textContent = message;
-        winOverlay.style.display = 'flex';
-        winOverlay.style.opacity = '1';
-        winOverlay.style.transform = 'translate(-50%, -50%) scale(1)';
+    function showWinOverlay(message, duration = 4000, audioFilename = null) {
+      winOverlay.textContent = message;
+      winOverlay.style.display = 'flex';
+      winOverlay.style.opacity = '1';
+      winOverlay.style.transform = 'translate(-50%, -50%) scale(1)';
+      if (audioFilename) playNotificationSound(audioFilename);
 
-        if (audioFilename) {
-            playNotificationSound(audioFilename);
-        }
+      // Hiệu ứng pháo hoa
+      showFireworks();
 
-        setTimeout(() => {
-            winOverlay.style.opacity = '0';
-            winOverlay.style.transform = 'translate(-50%, -50%) scale(0.8)';
-            winOverlay.addEventListener('transitionend', function handler() {
-                winOverlay.style.display = 'none';
-                winOverlay.removeEventListener('transitionend', handler);
-            }, { once: true });
-        }, duration);
+      setTimeout(() => {
+        winOverlay.style.opacity = '0';
+        winOverlay.style.transform = 'translate(-50%, -50%) scale(0.8)';
+        winOverlay.addEventListener('transitionend', function handler() {
+          winOverlay.style.display = 'none';
+          winOverlay.removeEventListener('transitionend', handler);
+        }, { once: true });
+      }, duration);
     }
 
+    function showFireworks(count = 30) {
+      const fireworksContainer = document.createElement("div");
+      fireworksContainer.classList.add("fireworks");
+      document.body.appendChild(fireworksContainer);
+
+      for (let i = 0; i < count; i++) {
+        const firework = document.createElement("div");
+        firework.classList.add("firework");
+        firework.style.left = `${Math.random() * 100}vw`;
+        firework.style.top = `${Math.random() * 100}vh`;
+        firework.style.animationDelay = `${Math.random() * 1.2}s`; // Ngẫu nhiên hóa thời gian bắt đầu
+        firework.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`; // Màu sắc ngẫu nhiên
+        fireworksContainer.appendChild(firework);
+      }
+
+      // Xóa container pháo hoa sau khi hiệu ứng kết thúc
+      setTimeout(() => fireworksContainer.remove(), 2500);
+    }
 
     function getRandomQuestionIndex() {
-        if (availableQuestionIndices.length === 0) {
-            if (allQuestions.length > 0) {
-                showNotification("Bạn đã hoàn thành tất cả các câu hỏi! Bắt đầu lại bộ câu hỏi.", 3000, 'info', 'tb3.wav');
-                for (let i = 0; i < allQuestions.length; i++) {
-                    availableQuestionIndices.push(i);
-                }
-                askedQuestionIndices = [];
-            } else {
-                return -1;
-            }
+      if (availableQuestionIndices.length === 0) {
+        if (allQuestions.length > 0) {
+          showNotification("Thông báo 1: Bạn đã hoàn thành tất cả các câu hỏi!", 3000, 'info', 'tb3.wav');
+          setTimeout(() => {
+            showNotification("Thông báo 2: Hệ thống sẽ bắt đầu lại bộ câu hỏi.", 3000, 'info', 'tb4.wav');
+          }, 1000);
+          setTimeout(() => {
+            showNotification("Thông báo 3: Chúc bạn tiếp tục chơi vui vẻ!", 3000, 'success');
+          }, 2000);
+
+          for (let i = 0; i < allQuestions.length; i++) {
+            availableQuestionIndices.push(i);
+          }
+          askedQuestionIndices = [];
+        } else {
+          return -1;
         }
-        const randomIndex = Math.floor(Math.random() * availableQuestionIndices.length);
-        const questionActualIndex = availableQuestionIndices.splice(randomIndex, 1)[0];
-        askedQuestionIndices.push(questionActualIndex);
-        return questionActualIndex;
+      }
+
+      const randomIndex = Math.floor(Math.random() * availableQuestionIndices.length);
+      const questionActualIndex = availableQuestionIndices.splice(randomIndex, 1)[0];
+      askedQuestionIndices.push(questionActualIndex);
+      return questionActualIndex;
     }
 
     function initializeGame() {
@@ -401,35 +476,32 @@
         let index = Math.floor((360 - (finalAngle % 360) + (360 / numSegments / 2)) / (360 / numSegments)) % numSegments;
         const result = originalSegments[index].text;
 
-        // --- BẮT ĐẦU KHỐI MÃ ĐÃ SỬA ---
-        
-        // Đặt màu nền và hiển thị overlay trước
         resultOverlay.style.background = originalSegments[index].color;
         resultOverlay.style.display = "block";
 
         if (!isNaN(parseInt(result))) {
-          resultOverlay.innerText = `+${result} điểm!`; // Thông báo rõ ràng hơn
+          resultOverlay.innerText = `+${result} điểm!`;
           currentSpinValue = parseInt(result);
           isGuessingLetter = true;
           isGuessingFullAnswer = false;
           updateGuessInputVisibility();
           showNotification(`Bạn quay được ${result} điểm! Mời đoán một chữ cái.`, 3000, 'info', 'tb23.wav');
         } else if (result === "Nhân đôi") {
-          resultOverlay.innerText = `NHÂN ĐÔI ĐIỂM!`; // Thông báo rõ ràng hơn
+          resultOverlay.innerText = `NHÂN ĐÔI ĐIỂM!`;
           currentSpinValue = "double";
           isGuessingLetter = true;
           isGuessingFullAnswer = false;
           updateGuessInputVisibility();
           showNotification(`Kết quả: Nhân đôi! Nhập chữ cái bạn muốn đoán.`, 3000, 'info', 'tb7.wav');
         } else if (result === "Đoán chữ") {
-          resultOverlay.innerText = `ĐOÁN CẢ Ô CHỮ!`; // Thông báo rõ ràng hơn
+          resultOverlay.innerText = `ĐOÁN CẢ Ô CHỮ!`;
           isGuessingLetter = false;
           isGuessingFullAnswer = true;
           currentSpinValue = null;
           updateGuessInputVisibility();
           showNotification(`Kết quả: Đoán chữ! Nhập toàn bộ đáp án.`, 3000, 'info', 'tb8.wav');
         } else if (result === "May mắn") {
-            resultOverlay.innerText = `Ô MAY MẮN!`; // Thông báo rõ ràng hơn
+            resultOverlay.innerText = `Ô MAY MẮN!`;
             currentSpinValue = null;
             isGuessingLetter = false;
             isGuessingFullAnswer = false;
@@ -442,7 +514,7 @@
             setTimeout(() => { resultOverlay.style.display = "none"; }, 5000);
             updateBuyLetterButtonState();
         } else {
-          resultOverlay.innerText = result; // Giữ nguyên cho các trường hợp khác nếu có
+          resultOverlay.innerText = result;
           currentSpinValue = null;
           isGuessingLetter = false;
           isGuessingFullAnswer = false;
@@ -451,8 +523,6 @@
           guessInputContainer.style.display = "none";
           setTimeout(() => { resultOverlay.style.display = "none"; }, 5000);
         }
-
-        // --- KẾT THÚC KHỐI MÃ ĐÃ SỬA ---
 
         spinning = false;
 
@@ -509,7 +579,6 @@
                 box.innerText = answer[randomIndex];
                 box.classList.add("revealed");
             }
-            // The score logic is now handled in the spinWheel and buyLetter functions
             checkGameCompletion();
             return true;
         } else {
@@ -643,12 +712,11 @@
       updateBuyLetterButtonState();
     }
 
+
     function checkGameCompletion() {
       const allLetterBoxesFilled = revealedLetters.every(char => char !== null && char !== " ");
-
       if (allLetterBoxesFilled) {
         showWinOverlay(`Chúc mừng! Bạn đã hoàn thành câu hỏi này với ${scores[0]} điểm!`, 4000, 'tb21.wav');
-
         setTimeout(() => {
           initializeGame();
         }, 4000);
