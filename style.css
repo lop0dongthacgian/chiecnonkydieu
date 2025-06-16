@@ -400,17 +400,18 @@ header h1 {
     display: none;
     z-index: 1000; /* Increased z-index to ensure visibility */
     box-shadow: 0 0 15px rgba(0,0,0,0.5);
-    animation: fadeScaleIn 0.5s ease-out;
+    animation: fadeScaleInResult 0.5s ease-out; /* Changed animation name */
 }
 
-@keyframes fadeScaleIn {
+/* New animation keyframes for fixed position */
+@keyframes fadeScaleInResult {
     from {
         opacity: 0;
-        transform: translate(-50%, -50%) scale(0.8);
+        transform: translateX(-50%) scale(0.8);
     }
     to {
         opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
+        transform: translateX(-50%) scale(1);
     }
 }
 
@@ -666,10 +667,10 @@ footer {
         padding: 12px 25px;
     }
 
-    #resultOverlay {
+    #resultOverlay { /* Adjusted for smaller screens */
         font-size: 2em;
         padding: 10px 20px;
-        bottom: 150px; /* Adjust for smaller screens if needed */
+        bottom: 150px;
     }
 
     #musicToggle {
@@ -713,10 +714,10 @@ footer {
         border-right: 12px solid transparent;
         border-bottom: 20px solid var(--primary-color);
     }
-    #resultOverlay {
+    #resultOverlay { /* Further adjusted for very small screens */
         font-size: 1.5em;
         padding: 8px 15px;
-        bottom: 120px; /* Further adjust for very small screens */
+        bottom: 120px;
     }
     #guessLetter {
         width: 90%;
