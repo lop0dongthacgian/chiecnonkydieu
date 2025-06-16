@@ -20,18 +20,18 @@ const allQuestions = [
     {
         question: "Who is your father's father? (Ông nội của bạn là ai?)",
         answer: ["G", "R", "A", "N", "D", "P", "A"],
-        plainAnswer: ["G", "R", "A", "N", "D", "P", "A"]
+        plainAnswer: ["G", "R", "A", "N", "D", "P", "A"] //GRANDPA
     },
     {
         question: "Who is your mother's mother? (Bà ngoại của bạn là ai?)",
         answer: ["G", "R", "A", "N", "D", "M", "A"],
-        plainAnswer: ["G", "R", "A", "N", "D", "M", "A"]
+        plainAnswer: ["G", "R", "A", "N", "D", "M", "A"] //GRANDMA
     },
     // New question added
     {
         question: "Who is your father's brother? (Chú/Cậu của bạn là ai?)",
         answer: ['U', 'N', 'C', 'L', 'E'],
-        plainAnswer: ['U', 'N', 'C', 'L', 'E']
+        plainAnswer: ['U', 'N', 'C', 'L', 'E'] //UNCLE
     },
 
     // Unit 2: My School (Trường học của tôi) - 10 questions
@@ -53,42 +53,42 @@ const allQuestions = [
     {
         question: "Where do you sit in class? (Bạn ngồi ở đâu trong lớp?)",
         answer: ["C", "H", "A", "I", "R"],
-        plainAnswer: ["C", "H", "A", "I", "R"]
+        plainAnswer: ["C", "H", "A", "I", "R"] //CHAIR
     },
     {
         question: "What do you write on? (Bạn viết lên cái gì?)",
         answer: ["B", "O", "A", "R", "D"],
-        plainAnswer: ["B", "O", "A", "R", "D"]
+        plainAnswer: ["B", "O", "A", "R", "D"] //BOARD
     },
     {
         question: "You go to this place to study. (Bạn đến nơi này để học.)",
         answer: ["S", "C", "H", "O", "O", "L"],
-        plainAnswer: ["S", "C", "H", "O", "O", "L"]
+        plainAnswer: ["S", "C", "H", "O", "O", "L"] //SCHOOL
     },
     {
         question: "This is a place where you play at school. (Đây là nơi bạn chơi ở trường.)",
         answer: ['P','L','A','Y','G','R','O','U','N','D'],
-        plainAnswer: ['P','L','A','Y','G','R','O','U','N','D']
+        plainAnswer: ['P','L','A','Y','G','R','O','U','N','D'] //PLAYGROUND
     },
     {
         question: "You use this to cut paper. (Bạn dùng cái này để cắt giấy.)",
         answer: ['S','C','I','S','S','O','R','S'],
-        plainAnswer: ['S','C','I','S','S','O','R','S']
+        plainAnswer: ['S','C','I','S','S','O','R','S'] //SCISSORS
     },
     {
         question: "You color pictures with this. (Bạn tô màu tranh với cái này.)",
         answer: ['C','R','A','Y','O','N'],
-        plainAnswer: ['C','R','A','Y','O','N']
+        plainAnswer: ['C','R','A','Y','O','N'] //CRAYON
     },
     {
         question: "You carry your lunch in this. (Bạn mang bữa trưa trong cái này.)",
         answer: ['L','U','N','C','H','B','O','X'],
-        plainAnswer: ['L','U','N','C','H','B','O','X']
+        plainAnswer: ['L','U','N','C','H','B','O','X'] //LUNCHBOX
     },
     {
         question: "You do this with a pencil to make words. (Bạn làm điều này với bút chì để tạo từ.)",
         answer: ['W','R','I','T','E'],
-        plainAnswer: ['W','R','I','T','E']
+        plainAnswer: ['W','R','I','T','E'] //WRITE
     },
 
     // Unit 3: My Toys (Đồ chơi của tôi) - 5 questions
@@ -110,12 +110,12 @@ const allQuestions = [
     {
         question: "It has four wheels and you can push it. (Nó có bốn bánh xe và bạn có thể đẩy nó.)",
         answer: ["C", "A", "R"],
-        plainAnswer: ["C", "A", "R"]
+        plainAnswer: ["C", "A", "R"] //CAR
     },
     {
         question: "You use this to play music. (Bạn dùng cái này để phát nhạc.)",
         answer: ["R", "A", "D", "I", "O"],
-        plainAnswer: ["R", "A", "D", "I", "O"]
+        plainAnswer: ["R", "A", "D", "I", "O"] //RADIO
     },
     {
         question: "It's a toy with many colorful blocks you can build with. (Đồ chơi có nhiều khối đầy màu sắc bạn có thể xây dựng.)",
@@ -147,12 +147,12 @@ const allQuestions = [
     {
         question: "It barks and is a common pet. (Nó sủa và là thú cưng phổ biến.)",
         answer: ["D", "O", "G"],
-        plainAnswer: ["D", "O", "G"]
+        plainAnswer: ["D", "O", "G"] //DOG
     },
     {
         question: "It swims and has fins. (Nó bơi và có vây.)",
         answer: ["F", "I", "S", "H"],
-        plainAnswer: ["F", "I", "S", "H"]
+        plainAnswer: ["F", "I", "S", "H"] //FISH
     },
     {
         question: "This animal says 'Oink'. (Con vật này kêu 'Ủn ỉn'.)",
@@ -199,22 +199,22 @@ const allQuestions = [
     {
         question: "You use this to see. (Bạn sử dụng gì để nhìn thấy?)",
         answer: ["E", "Y", "E", "S"],
-        plainAnswer: ["E", "Y", "E", "S"]
+        plainAnswer: ["E", "Y", "E", "S"] //EYES
     },
     {
         question: "You use it to smell. (Bạn dùng nó để ngửi.)",
         answer: ["N", "O", "S", "E"],
-        plainAnswer: ["N", "O", "S", "E"]
+        plainAnswer: ["N", "O", "S", "E"] //NOSE
     },
     {
         question: "You brush these every morning. (Bạn đánh những cái này mỗi sáng.)",
         answer: ['T','E','E','T','H'],
-        plainAnswer: ['T','E','E','T','H']
+        plainAnswer: ['T','E','E','T','H'] //TEETH
     },
     {
         question: "You clap with these. (Bạn vỗ tay bằng cái này.)",
         answer: ['H','A','N','D','S'],
-        plainAnswer: ['H','A','N','D','S']
+        plainAnswer: ['H','A','N','D','S'] //HANDS
     },
 
     // Unit 6: Clothes (Quần áo) - 5 questions
@@ -236,27 +236,27 @@ const allQuestions = [
     {
         question: "You wear this when it's cold. (Bạn mặc cái này khi trời lạnh.)",
         answer: ["C", "O", "A", "T"],
-        plainAnswer: ["C", "O", "A", "T"]
+        plainAnswer: ["C", "O", "A", "T"] //COAT
     },
     {
         question: "You wear it on your legs. (Bạn mặc nó ở chân.)",
         answer: ["P", "A", "N", "T", "S"],
-        plainAnswer: ["P", "A", "N", "T", "S"]
+        plainAnswer: ["P", "A", "N", "T", "S"] //PANTS
     },
     {
         question: "You wear these on your hands in winter. (Bạn mang gì vào tay khi trời lạnh?)",
         answer: ['G','L','O','V','E','S'],
-        plainAnswer: ['G','L','O','V','E','S']
+        plainAnswer: ['G','L','O','V','E','S'] //GLOVES
     },
     {
         question: "What you wear to go to bed. (Bạn mặc gì khi đi ngủ?)",
         answer: ['P','A','J','A','M','A','S'],
-        plainAnswer: ['P','A','J','A','M','A','S']
+        plainAnswer: ['P','A','J','A','M','A','S'] //PAJAMAS
     },
     {
         question: "You wear this over your shirt for warmth. (Bạn mặc cái này bên ngoài áo để giữ ấm.)",
         answer: ['S','W','E','A','T','E','R'],
-        plainAnswer: ['S','W','E','A','T','E','R']
+        plainAnswer: ['S','W','E','A','T','E','R'] //SWEATER
     },
 
     // Unit 7: Food (Thức ăn) - 10 questions
@@ -273,42 +273,42 @@ const allQuestions = [
     {
         question: "It's sweet and bees make it. (Nó ngọt và ong tạo ra.)",
         answer: ["H", "O", "N", "E", "Y"],
-        plainAnswer: ["H", "O", "N", "E", "Y"]
+        plainAnswer: ["H", "O", "N", "E", "Y"] //HONEY
     },
     {
         question: "You eat this in the morning. (Bạn ăn cái này vào buổi sáng.)",
         answer: ["B", "R", "E", "A", "D"],
-        plainAnswer: ["B", "R", "E", "A", "D"]
+        plainAnswer: ["B", "R", "E", "A", "D"] //BREAD
     },
     {
         question: "You eat this in the morning. (Bạn ăn gì vào buổi sáng?)",
         answer: ["B", "R", "E", "A", "K", "F", "A", "S", "T"],
-        plainAnswer: ["B", "R", "E", "A", "K", "F", "A", "S", "T"]
+        plainAnswer: ["B", "R", "E", "A", "K", "F", "A", "S", "T"] //BREAKFAST
     },
     {
         question: "A round red fruit. (Một loại quả tròn màu đỏ.)",
         answer: ['A','P','P','L','E'],
-        plainAnswer: ['A','P','P','L','E']
+        plainAnswer: ['A','P','P','L','E'] //APPLE
     },
     {
         question: "You drink this when you are thirsty. (Bạn uống cái này khi khát.)",
         answer: ['W','A','T','E','R'],
-        plainAnswer: ['W','A','T','E','R']
+        plainAnswer: ['W','A','T','E','R'] //WATER
     },
     {
         question: "It comes from chickens and you can fry it. (Nó đến từ gà và bạn có thể chiên nó.)",
         answer: ['E','G','G'],
-        plainAnswer: ['E','G','G']
+        plainAnswer: ['E','G','G'] //EGG
     },
     {
         question: "A sweet treat often eaten after dinner. (Một món ngọt thường được ăn sau bữa tối.)",
         answer: ['C','A','K','E'],
-        plainAnswer: ['C','A','K','E']
+        plainAnswer: ['C','A','K','E'] //CAKE
     },
     {
         question: "A long green vegetable. (Một loại rau dài màu xanh.)",
         answer: ['C','U','C','U','M','B','E','R'],
-        plainAnswer: ['C','U','C','U','M','B','E','R']
+        plainAnswer: ['C','U','C','U','M','B','E','R'] //CUCUMBER
     },
 
     // Unit 8: My House (Ngôi nhà của tôi) - 10 questions
@@ -330,12 +330,12 @@ const allQuestions = [
     {
         question: "You keep your clothes in this. (Bạn cất quần áo trong cái này.)",
         answer: ["C", "L", "O", "S", "E", "T"],
-        plainAnswer: ["C", "L", "O", "S", "E", "T"]
+        plainAnswer: ["C", "L", "O", "S", "E", "T"] //CLOSET
     },
     {
         question: "You open this to enter a room. (Bạn mở gì để bước vào phòng?)",
         answer: ["D", "O", "O", "R"],
-        plainAnswer: ["D", "O", "O", "R"]
+        plainAnswer: ["D", "O", "O", "R"] //DOOR
     },
     {
         question: "You sit on this in the living room. (Bạn ngồi trên cái này trong phòng khách.)",
@@ -382,22 +382,22 @@ const allQuestions = [
     {
         question: "You go here when you are sick. (Bạn đến đây khi bị bệnh.)",
         answer: ["H", "O", "S", "P", "I", "T", "A", "L"],
-        plainAnswer: ["H", "O", "S", "P", "I", "T", "A", "L"]
+        plainAnswer: ["H", "O", "S", "P", "I", "T", "A", "L"] //HOSPITAL
     },
     {
         question: "You send letters from here. (Bạn gửi thư từ đây.)",
         answer: ["P", "O", "S", "T"],
-        plainAnswer: ["P", "O", "S", "T"]
+        plainAnswer: ["P", "O", "S", "T"] //POST
     },
     {
         question: "You go here to swim. (Bạn đến đây để bơi.)",
         answer: ['P','O','O','L'],
-        plainAnswer: ['P','O','O','L']
+        plainAnswer: ['P','O','O','L'] //POOL
     },
     {
         question: "You go here to watch a movie. (Bạn đến đây để xem phim.)",
         answer: ['C','I','N','E','M','A'],
-        plainAnswer: ['C','I','N','E','M','A']
+        plainAnswer: ['C','I','N','E','M','A'] //CINEMA
     },
     {
         question: "A tall building in a city. (Một tòa nhà cao ở thành phố.)",
@@ -434,12 +434,12 @@ const allQuestions = [
     {
         question: "It lights up the night sky. (Nó chiếu sáng bầu trời ban đêm.)",
         answer: ["M", "O", "O", "N"],
-        plainAnswer: ["M", "O", "O", "N"]
+        plainAnswer: ["M", "O", "O", "N"] //MOON
     },
     {
         question: "You see this in the sky after rain. (Bạn thấy cái này trên trời sau mưa.)",
         answer: ["R", "A", "I", "N", "B", "O", "W"],
-        plainAnswer: ["R", "A", "I", "N", "B", "O", "W"]
+        plainAnswer: ["R", "A", "I", "N", "B", "O", "W"] //RAINBOW
     },
     {
         question: "A very tall plant with a trunk and leaves. (Một loại cây rất cao có thân và lá.)",
@@ -486,12 +486,12 @@ const allQuestions = [
     {
         question: "You do this with your eyes at night. (Bạn làm điều này với mắt vào ban đêm.)",
         answer: ["C", "L", "O", "S", "E"],
-        plainAnswer: ["C", "L", "O", "S", "E"]
+        plainAnswer: ["C", "L", "O", "S", "E"] //CLOSE
     },
     {
         question: "You do this with your legs when you play. (Bạn làm điều này với chân khi chơi.)",
         answer: ["J", "U", "M", "P"],
-        plainAnswer: ["J", "U", "M", "P"]
+        plainAnswer: ["J", "U", "M", "P"] //JUMP
     },
     {
         question: "You do this with your voice to make sounds. (Bạn làm điều này với giọng nói của mình để tạo ra âm thanh.)",
@@ -652,7 +652,7 @@ const allQuestions = [
     {
         question: "Color of bananas. (Màu của quả chuối là gì?)",
         answer: ['Y','E','L','L','O','W'],
-        plainAnswer: ['Y','E','L','L','O','W']
+        plainAnswer: ['Y','E','L','L','O','W'] //YELLOW
     },
     {
         question: "Number before ten. (Số trước số mười là gì?)",
@@ -721,12 +721,12 @@ const allQuestions = [
     {
         question: "Opposite of big. (Trái nghĩa với 'to')",
         answer: ['S','M','A','L','L'],
-        plainAnswer: ['S','M','A','L','L']
+        plainAnswer: ['S','M','A','L','L'] //SMALL
     },
     {
         question: "Opposite of slow. (Trái nghĩa với 'chậm')",
         answer: ['F','A','S','T'],
-        plainAnswer: ['F','A','S','T']
+        plainAnswer: ['F','A','S','T'] //FAST
     },
     {
         question: "Opposite of 'up'. (Trái nghĩa với 'lên')",
